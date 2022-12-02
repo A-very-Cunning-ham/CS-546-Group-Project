@@ -1,0 +1,172 @@
+//You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
+//You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
+//You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
+const { ObjectId } = require('mongodb');
+
+function errorIfNotProperString(val, variableName) {
+	if (val === undefined) {
+		throw `${variableName || 'provided variable'} is not present`;
+	}
+	if (typeof val !== 'string') {
+		throw `${variableName || 'provided variable'} is not a string`;
+	}
+	let str = val.trim();
+	if (str.length === 0) {
+		throw `${variableName || 'provided variable'} is an empty string`;
+	}
+}
+
+function errorIfNotProperArray(val, variableName) {
+	if (val === undefined) {
+		throw `${variableName || 'Input Array'} not provided`;
+	}
+	if (!Array.isArray(val)) {
+		throw `${variableName || 'Provided Variable'} is not an Array`;
+	}
+
+	if (val.length === 0) {
+		throw `${variableName || 'Provided Array'} is Empty`;
+	}
+}
+
+function errorIfStringHasSpecialCharacter(val, variableName) {
+	for (let x of val) {
+		let i = x.charCodeAt(0);
+		if (
+			!(
+				(i >= 48 && i <= 57) || //Numbers
+				(i >= 65 && i <= 90) || //Upper Case
+				(i >= 97 && i <= 122) || //Lower Case
+				false
+			)
+		) {
+			throw `${variableName || 'Input String'} has special character`;
+		}
+	}
+}
+
+function errorIfStringHasNumber(val, variableName) {
+	for (let x of val) {
+		let i = x.charCodeAt(0);
+		if (
+			i >= 48 &&
+			i <= 57 //Numbers
+		) {
+			throw `${variableName || 'Input String'} has numbers`;
+		}
+	}
+}
+
+function errorIfStringIsNotNumber(val, variableName, errorMessage) {
+	if (val == undefined) {
+		if (errorMessage) throw errorMessage;
+		else throw `${variableName || 'Input String'} is not number`;
+	}
+	for (let x of val) {
+		let i = x.charCodeAt(0);
+		if (
+			!(i >= 48 && i <= 57) //Numbers
+		) {
+			if (errorMessage) throw errorMessage;
+			else throw `${variableName || 'Input String'} is not number`;
+		}
+	}
+}
+
+function errorIfStringIsNotProperUserName(val, variableName) {
+	//
+	val = val.trim();
+	errorIfNotProperString(val, variableName);
+	errorIfStringHasSpecialCharacter(val, variableName);
+
+	if (val.length < 4) {
+		throw `${variableName || 'Input String'} is short`;
+	}
+}
+
+function errorIfStringIsNotProperPassword(val, variableName) {
+	//
+	val = val.trim();
+	errorIfNotProperString(val, variableName);
+
+	if (val.length < 6) {
+		throw `${variableName || 'Input String'} is short`;
+	}
+
+	//upper case
+	let upper_chr_present = false;
+
+	for (let x of val) {
+		let i = x.charCodeAt(0);
+		if (
+			(i >= 65 && i <= 90) || //Upper Case
+			false
+		) {
+			upper_chr_present = true;
+			break;
+		}
+	}
+
+	if (!upper_chr_present) {
+		throw `${variableName || 'Input String'} does not contains upper case`;
+	}
+
+	//number
+	let num_chr_present = false;
+
+	for (let x of val) {
+		let i = x.charCodeAt(0);
+		if (
+			(i >= 48 && i <= 57) || //Numbers
+			false
+		) {
+			num_chr_present = true;
+			break;
+		}
+	}
+
+	if (!num_chr_present) {
+		throw `${variableName || 'Input String'} does not contains upper case`;
+	}
+
+	if (val.length < 6) {
+		throw `${variableName || 'Input String'} is short`;
+	}
+
+	//space
+	if (val.indexOf(' ') >= 0) {
+		throw `${variableName || 'Input String'} contains space`;
+	}
+
+	//special charcter
+	let special_chr_present = false;
+
+	for (let x of val) {
+		let i = x.charCodeAt(0);
+		if (
+			!(
+				(i >= 48 && i <= 57) || //Numbers
+				(i >= 65 && i <= 90) || //Upper Case
+				(i >= 97 && i <= 122) || //Lower Case
+				false
+			)
+		) {
+			special_chr_present = true;
+		}
+	}
+
+	if (!special_chr_present) {
+		throw `${
+			variableName || 'Input String'
+		} does not contains special character`;
+	}
+}
+module.exports = {
+	errorIfNotProperString,
+	errorIfStringIsNotProperPassword,
+	errorIfNotProperArray,
+	errorIfStringIsNotProperUserName,
+	errorIfStringHasSpecialCharacter,
+	errorIfStringHasNumber,
+	errorIfStringIsNotNumber,
+};
