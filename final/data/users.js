@@ -67,6 +67,23 @@ const checkUser = async (username, password) => {
 	} else {
 		throw `Either the username or password is invalid`;
 	}
+
+	return user;
 };
 
-module.exports = { createUser, checkUser };
+const getUserCollege = async (username) => {
+	//
+	try {
+		helpers.errorIfStringIsNotProperUserName(username, 'usernames');
+	} catch (e) {
+		throw `Either the username or password is invalid`;
+	}
+
+	const user_collection_c = await user_collection();
+	username = username.toLowerCase();
+	let user = await user_collection_c.findOne({ username: username });
+	if (!user) throw `Either the username or password is invalid`;
+
+	return user.college;
+};
+module.exports = { createUser, checkUser, getUserCollege };

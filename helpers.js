@@ -162,6 +162,13 @@ function errorIfStringIsNotProperPassword(val, variableName) {
 		} does not contains special character`;
 	}
 }
+
+function errorIfNotProperID(val, variableName) {
+	//
+	errorIfNotProperString(val, variableName);
+	val = val.trim();
+	if (!ObjectId.isValid(val)) throw `${variableName} is an invalid object ID`;
+}
 module.exports = {
 	errorIfNotProperString,
 	errorIfStringIsNotProperPassword,
@@ -170,4 +177,5 @@ module.exports = {
 	errorIfStringHasSpecialCharacter,
 	errorIfStringHasNumber,
 	errorIfStringIsNotNumber,
+	errorIfNotProperID,
 };
