@@ -4,6 +4,7 @@
 const { ObjectId } = require('mongodb');
 
 function errorIfNotProperString(val, variableName) {
+	//
 	if (val === undefined) {
 		throw `${variableName || 'provided variable'} is not present`;
 	}
