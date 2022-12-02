@@ -16,7 +16,7 @@ const createComment = async (eventID, userID, comment) => {
 	helpers.errorIfNotProperID(eventID, 'eventID');
 	eventID = eventID.trim();
 	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
-	if (!event) throw `No Event present with id: ${c}`;
+	if (!event) throw `No Event present with id: ${eventID}`;
 
 	//check if user exists
 	helpers.errorIfNotProperID(userID, 'userID');
@@ -47,4 +47,22 @@ const createComment = async (eventID, userID, comment) => {
 	);
 };
 
-module.exports = { createComment };
+const getAllCommentForEvent = async (eventID) => {
+	const event_collection_c = await event_collection();
+
+	//check if event exists
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+
+	let commentList = event.comment;
+	commentList = commentList.map(function (val) {
+		val._id = val._id.toString();
+		return val;
+	});
+
+	return commentList;
+};
+
+module.exports = { createComment, getAllCommentForEvent };
