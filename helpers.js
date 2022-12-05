@@ -74,7 +74,7 @@ function errorIfStringIsNotNumber(val, variableName, errorMessage) {
 	}
 }
 
-function errorIfStringIsNotProperUserName(val, variableName) {
+function errorIfNotProperUserName(val, variableName) {
 	//
 	val = val.trim();
 	errorIfNotProperString(val, variableName);
@@ -85,7 +85,7 @@ function errorIfStringIsNotProperUserName(val, variableName) {
 	}
 }
 
-function errorIfStringIsNotProperPassword(val, variableName) {
+function errorIfNotProperPassword(val, variableName) {
 	//
 	val = val.trim();
 	errorIfNotProperString(val, variableName);
@@ -165,15 +165,15 @@ function errorIfStringIsNotProperPassword(val, variableName) {
 
 function errorIfNotProperID(val, variableName) {
 	//
-	errorIfNotProperString(val, variableName);
-	val = val.trim();
+	// errorIfNotProperString(val, variableName);
+	// val = val.trim();
 	if (!ObjectId.isValid(val)) throw `${variableName} is an invalid object ID`;
 }
 module.exports = {
 	errorIfNotProperString,
-	errorIfStringIsNotProperPassword,
+	errorIfNotProperPassword,
 	errorIfNotProperArray,
-	errorIfStringIsNotProperUserName,
+	errorIfNotProperUserName,
 	errorIfStringHasSpecialCharacter,
 	errorIfStringHasNumber,
 	errorIfStringIsNotNumber,
