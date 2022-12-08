@@ -2,10 +2,10 @@ const mongoCollections = require('../config/mongoCollections');
 const helpers = require('../../helpers');
 const user_collection = mongoCollections.user_collection;
 const bcrypt = require('bcrypt');
-const saltRounds = 12;
+const saltRounds = 4;
 
 const createUser = async (username, password, firstName, lastName, college) => {
-	helpers.errorIfNotProperUserName(username, 'usernames');
+	helpers.errorIfNotProperUserName(username, 'username');
 	helpers.errorIfNotProperPassword(password, 'password');
 	helpers.errorIfNotProperName(firstName, 'firstName');
 	helpers.errorIfNotProperName(lastName, 'lastName');
@@ -48,7 +48,7 @@ const createUser = async (username, password, firstName, lastName, college) => {
 const checkUser = async (username, password) => {
 	//
 	try {
-		helpers.errorIfNotProperUserName(username, 'usernames');
+		helpers.errorIfNotProperUserName(username, 'username');
 	} catch (e) {
 		throw `Either the username or password is invalid`;
 	}
@@ -76,7 +76,7 @@ const checkUser = async (username, password) => {
 const getUserData = async (username) => {
 	//
 	try {
-		helpers.errorIfNotProperUserName(username, 'usernames');
+		helpers.errorIfNotProperUserName(username, 'username');
 	} catch (e) {
 		throw `Incorrect username`;
 	}
