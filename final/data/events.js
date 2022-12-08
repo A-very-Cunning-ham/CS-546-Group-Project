@@ -12,7 +12,8 @@ const createEvent = async (
 	postedBy,
 	tags,
 	description,
-	capacity
+	capacity,
+	college
 ) => {
 	//
 	const event_collection_c = await event_collection();
@@ -73,3 +74,5 @@ const createEvent = async (
 		return { eventInserted: true };
 	}
 };
+
+module.exports = {createEvent};
