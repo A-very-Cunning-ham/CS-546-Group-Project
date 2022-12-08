@@ -108,7 +108,7 @@ router
   .route('/create')
   .get(async (req, res) => {
     try{
-        if(!req.session.user){
+        if(req.session.user){
             res.render("createEvent");
         }else{
             res.redirect("/login");
@@ -131,7 +131,8 @@ router
     try{
         let event = await events.createEvent(createData.eventName, createData.location, createData.startTime, createData.endTime, createData.postedBy, createData.tags, createData.description, createData.capacity, createData.college);
         if(event.userInserted == true){
-            res.render("createEvent");
+            res.render("createdEvents", {eventName: createData.eventName, location: createData.location, startTime: createData.startTime, endTime: createData.endTime, postedBy: createData.postedBy, tags: createData.tags, 
+              description: createData.description, capacity: createData.capacity, college: createData.college});
         }
         else{
             res.status(500).render("createEvent", {
@@ -140,6 +141,22 @@ router
           }
     }catch(e){
         res.status(400).render("createEvent", {error: e});
+    }
+  });
+
+router
+  .route('/registered')
+  .get(async (req, res) => {
+    try{
+      if(req.session.user){
+        res.render("registeredEvents");
+      }
+      else{
+        res.redirect("/login");
+        //maybe send an error message somehow
+      }
+    }catch(e){
+      res.status(400);
     }
   });
 
