@@ -149,7 +149,25 @@ router
   .get(async (req, res) => {
     try{
       if(req.session.user){
+        //function from events.js to get all events that a user is registered for, then pass in result to render page
         res.render("registeredEvents");
+      }
+      else{
+        res.redirect("/login");
+        //maybe send an error message somehow
+      }
+    }catch(e){
+      res.status(400);
+    }
+  });
+
+  router
+  .route('/created')
+  .get(async (req, res) => {
+    try{
+      if(req.session.user){
+        //function to get all the events a user has created, then pass in result to render page
+        res.render("createdEvents");
       }
       else{
         res.redirect("/login");
