@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const data = require("../data");
-const { reviews } = require("../../../../Lab6_stub/data");
 const users = data.users;
 const events = data.events;
 
