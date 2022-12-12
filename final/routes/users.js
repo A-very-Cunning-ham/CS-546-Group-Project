@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const data = require("../data");
+const { reviews } = require("../../../../Lab6_stub/data");
 const users = data.users;
 const events = data.events;
 
@@ -162,20 +163,56 @@ router
   });
 
   router
-  .route('/created')
-  .get(async (req, res) => {
-    try{
-      if(req.session.user){
-        //function to get all the events a user has created, then pass in result to render page
-        res.render("createdEvents");
+    .route('/created')
+    .get(async (req, res) => {
+      try{
+        if(req.session.user){
+          //function to get all the events a user has created, then pass in result to render page
+          res.render("createdEvents");
+        }
+        else{
+          res.redirect("/login");
+          //maybe send an error message somehow
+        }
+      }catch(e){
+        res.status(400);
       }
-      else{
+    });
+
+  router
+    .route('/created/:id')
+    .get(async (req, res) => {
+      if(!req.session.user){
         res.redirect("/login");
         //maybe send an error message somehow
       }
-    }catch(e){
-      res.status(400);
-    }
-  });
+      try{
+        if(!req.params.id) throw "Event ID not given";
+        //rest of error checking
+      }catch(e){
+        res.status(400);
+      }
+      try{
+        //let info = await events.getCreatedEvent(req.params.id);     this will be the function to get the data of the specified event
+        res.render("eventId", {info: info});
+      }catch(e){
+        res.status(400);
+      }
+    });
+
+  router
+    .route('/favorited')
+    .get(async (req, res) => {
+      if(!req.session.user){
+        res.redirect("/login");
+        //maybe send an error message somehow
+      }
+      try{
+        //let favorited = await users.getFavorited
+        res.render("favorited", {favorited: favorited});
+      }catch(e){
+        res.status(400);
+      }
+    });
 
 module.exports = router;
