@@ -32,7 +32,7 @@ router
   .post(async (req, res) => {
     //when user tries to log in, if successful we send them to homepage. If username or password incorrect, we render the login page again with an error
     try{
-      const {usernameInput, passwordInput} = req.body;
+      TODO: add validation
       let output = await users.checkUser(usernameInput, passwordInput);
       if (output.authenticatedUser==true){
         req.session.user = usernameInput;
