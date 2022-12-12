@@ -1,4 +1,3 @@
-
 const commentRoutes = require("./comments");
 const eventRoutes = require("./events");
 const userRoutes = require("./users");
