@@ -4,23 +4,28 @@ const app = express();
 const session = require("express-session");
 const configRoutes = require("./routes");
 
-const exphbs = require("express-handlebars")
+const exphbs = require("express-handlebars");
 
 const cookieParser = require("cookie-parser");
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.engine("handlebars", exphbs.engine({defaultLayout: "main"}));
+app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-app.use(session({
-    name: 'AuthCookie'
-}));
+app.use(
+	session({
+		name: "AuthCookie",
+		secret: "some super secret string!",
+		resave: false,
+		saveUninitialized: true,
+	})
+);
 
 configRoutes(app);
 
-app.listen(3000, () =>{
-    console.log("Server is now running");
+app.listen(3000, () => {
+	console.log("Server is now running");
 });

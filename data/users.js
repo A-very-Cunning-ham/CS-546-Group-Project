@@ -1,14 +1,14 @@
-const mongoCollections = require('../config/mongoCollections');
-const helpers = require('../../helpers');
+const mongoCollections = require("../config/mongoCollections");
+const helpers = require("../helpers");
 const user_collection = mongoCollections.user_collection;
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 4;
 
 const createUser = async (username, password, firstName, lastName, college) => {
-	helpers.errorIfNotProperUserName(username, 'username');
-	helpers.errorIfNotProperPassword(password, 'password');
-	helpers.errorIfNotProperName(firstName, 'firstName');
-	helpers.errorIfNotProperName(lastName, 'lastName');
+	helpers.errorIfNotProperUserName(username, "username");
+	helpers.errorIfNotProperPassword(password, "password");
+	helpers.errorIfNotProperName(firstName, "firstName");
+	helpers.errorIfNotProperName(lastName, "lastName");
 
 	username.trim();
 	password.trim();
@@ -48,13 +48,13 @@ const createUser = async (username, password, firstName, lastName, college) => {
 const checkUser = async (username, password) => {
 	//
 	try {
-		helpers.errorIfNotProperUserName(username, 'username');
+		helpers.errorIfNotProperUserName(username, "username");
 	} catch (e) {
 		throw `Either the username or password is invalid`;
 	}
 
 	try {
-		helpers.errorIfNotProperPassword(password, 'password');
+		helpers.errorIfNotProperPassword(password, "password");
 	} catch (e) {
 		throw `Either the username or password is invalid`;
 	}
@@ -76,7 +76,7 @@ const checkUser = async (username, password) => {
 const getUserData = async (username) => {
 	//
 	try {
-		helpers.errorIfNotProperUserName(username, 'username');
+		helpers.errorIfNotProperUserName(username, "username");
 	} catch (e) {
 		throw `Incorrect username`;
 	}
