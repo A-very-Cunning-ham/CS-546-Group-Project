@@ -14,7 +14,7 @@ const constructorMethod = (app) => {
     // app.use("/events/register/:id", eventRoutes);
     // app.use("/events/favorite/:id", eventRoutes);
     app.use("/comment/event/:id", commentRoutes);
-    app.use("/logout", routes);//dank is working on this route
+    app.use("/logout", userRoutes);//dank is working on this route
 
     app.use("*", (req, res) => {
         res.sendStatus(404);

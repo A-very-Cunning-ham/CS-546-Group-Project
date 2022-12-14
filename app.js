@@ -16,7 +16,10 @@ app.engine("handlebars", exphbs.engine({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
 
 app.use(session({
-    name: 'AuthCookie'
+    name: 'AuthCookie',
+    secret: 'some secret string',
+    resave: false,
+    saveUninitialized: true
 }));
 
 configRoutes(app);
