@@ -161,7 +161,32 @@ router
     }catch(e){
       res.status(400);
     }
+  })
+  .post(async (req,res) => {
+    try{
+      if(req.session.user){
+      }
+      else{
+        res.redirect("login");
+        //maybe send error message
+      }
+    }catch(e){
+        res.status(400);
+      }
+    try{
+      if(!req.params.id) throw "Event ID not given";
+      //rest of error checking
+    }catch(e){
+      res.status(400);
+    }
+    try{
+      let del = await events.deleteEvent(req.params.id);
+      res.redirect("/created");
+    }catch(e){
+      res.status(400);
+    }
   });
+
 
   router
     .route('/created')
@@ -194,8 +219,33 @@ router
         res.status(400);
       }
       try{
-        //let info = await events.getCreatedEvent(req.params.id);     this will be the function to get the data of the specified event
+        let info = await events.getEventById(req.params.id);   
         res.render("eventId", {info: info});
+      }catch(e){
+        res.status(400);
+      }
+    })
+    .post(async (req,res) => {
+      try{
+        if(req.session.user){
+
+        }
+        else{
+          res.redirect("login");
+          //maybe send error message
+        }
+      }catch(e){
+          res.status(400);
+        }
+      try{
+        if(!req.params.id) throw "Event ID not given";
+        //rest of error checking
+      }catch(e){
+        res.status(400);
+      }
+      try{
+        let del = await events.deleteEvent(req.params.id);
+        res.redirect("/created");
       }catch(e){
         res.status(400);
       }
