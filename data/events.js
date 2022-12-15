@@ -41,8 +41,8 @@ const createEvent = async (
 	}
 	helpers.errorIfNotProperString(description, "description");
 
-	//	helpers.errorIfNotProperString(college, 'college');
-	college = user.college;
+	helpers.errorIfNotProperString(college, 'college');
+	//college = user.college;
 
 	helpers.errorIfStringIsNotNumber(capacity);
 	capacity = parseFloat(capacity);
@@ -120,3 +120,5 @@ const getUpcomingEvents = async (college) => {
 
 	return events;
 };
+
+module.exports = {createEvent, getEventById, getUpcomingEvents};
