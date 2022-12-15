@@ -5,6 +5,20 @@
     <title>{{title}}</title>
 </head>
 <body>
+    <!--Two headers for guest users or logged-in users. If user is a guest, then logged-in header will be hidden,
+    and vice versa-->
+    <header class="guest">
+        <ul class="headnav">
+            <li><a href="/register">Register</a></li>
+            <li><a href="/">Log in</a></li>
+            <li><a href="/homepage">Homepage</a></li>
+        </ul>
+    </header>
+    <header class="logged-in">
+        <ul class="headnav">
+            <li></li>
+        </ul>
+    </header>
     <main>
         {{{body}}}
     </main>
