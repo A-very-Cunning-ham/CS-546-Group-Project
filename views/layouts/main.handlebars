@@ -7,24 +7,27 @@
 <body>
     <!--Two headers for guest users or logged-in users. If user is a guest, then logged-in header will be hidden,
     and vice versa-->
-    <header id="guest">
-        <ul class="headnav">
-            <li><a href="/register">Register</a></li>
-            <li><a href="/">Log In</a></li>
-            <li><a href="/homepage">Homepage</a></li>
-        </ul>
-    </header>
-    <header id="logged-in">
-        <ul class="headnav">
-            <li>Hello, {{username}}</li>
-            <li><a href="/homepage">Your Homepage</a></li>
-            <li><a href="/create">Create Event</a></li>
-            <li><a href="/created">Your Events</a></li>
-            <li><a href="/registered">Your Registered Events</a></li>
-            <li><a href="/favorited">Your Favorited Events</a></li>
-            <li><a href="/logout">Log Out</a></li>
-        </ul>
-    </header>
+    {{#if loggedIn}}
+        <header class="logged-in">
+            <ul class="headnav">
+                <li>Hello, {{username}}</li>
+                <li><a href="/homepage">Your Homepage</a></li>
+                <li><a href="/create">Create Event</a></li>
+                <li><a href="/created">Your Events</a></li>
+                <li><a href="/registered">Your Registered Events</a></li>
+                <li><a href="/favorited">Your Favorited Events</a></li>
+                <li><a href="/logout">Log Out</a></li>
+            </ul>
+        </header>
+    {{else}}
+        <header class="guest">
+            <ul class="headnav">
+                <li><a href="/register">Register</a></li>
+                <li><a href="/">Log In</a></li>
+                <li><a href="/homepage">Homepage</a></li>
+            </ul>
+        </header>
+    {{/if}}
     <main>
         {{{body}}}
     </main>
