@@ -10,13 +10,19 @@
     <header class="guest">
         <ul class="headnav">
             <li><a href="/register">Register</a></li>
-            <li><a href="/">Log in</a></li>
+            <li><a href="/">Log In</a></li>
             <li><a href="/homepage">Homepage</a></li>
         </ul>
     </header>
     <header class="logged-in">
         <ul class="headnav">
-            <li></li>
+            <li>Hello, {{username}}</li>
+            <li><a href="/homepage">Your Homepage</a></li>
+            <li><a href="/create">Create Event</a></li>
+            <li><a href="/created">Your Events</a></li>
+            <li><a href="/registered">Your Registered Events</a></li>
+            <li><a href="/favorited">Your Favorited Events</a></li>
+            <li><a href="/logout">Log Out</a></li>
         </ul>
     </header>
     <main>
