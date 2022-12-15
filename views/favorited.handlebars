@@ -1,0 +1,17 @@
+<h1>Your Favorite Events</h1>
+<ul class="event">
+    {{#each favorited}}
+        <h2>{{eventName}}</h2>
+        <img src="{{image}}" alt="event image" class="imgId">
+        <p>Location: {{location}}</p>
+        <p>from {{startTime}} to {{endTime}}</p>
+        <p>Posted by {{postedBy}}</p>
+        <p>Capacity: {{numUserRegistered}}/{{capacity}}</p>
+        <p>{{description}}</p>
+        <p>Tags:</p>
+        {{#each tags}}
+            <p class="tag">#{{this}} </p>
+        {{/each}}
+        <p>{{numComments}} comment(s)</p>
+    {{/each}}
+</ul>
