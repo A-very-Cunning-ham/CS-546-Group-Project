@@ -7,14 +7,14 @@
 <body>
     <!--Two headers for guest users or logged-in users. If user is a guest, then logged-in header will be hidden,
     and vice versa-->
-    <header class="guest">
+    <header id="guest">
         <ul class="headnav">
             <li><a href="/register">Register</a></li>
             <li><a href="/">Log In</a></li>
             <li><a href="/homepage">Homepage</a></li>
         </ul>
     </header>
-    <header class="logged-in">
+    <header id="logged-in">
         <ul class="headnav">
             <li>Hello, {{username}}</li>
             <li><a href="/homepage">Your Homepage</a></li>
