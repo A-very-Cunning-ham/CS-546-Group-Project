@@ -65,8 +65,8 @@ const createEvent = async (
 	let new_event = {
 		eventName: eventName,
 		location: location,
-		startTime: startTime,
-		endTime: endTime,
+		startTime: new Date(startTime),
+		endTime: new Date(endTime),
 		postedBy: postedBy,
 		tags: tags,
 		description: description,
@@ -114,7 +114,7 @@ const getUpcomingEvents = async (college) => {
 	const event_collection_c = await event_collection();
 	const events = await event_collection_c.find({
 		college: college,
-		// startTime: { $gte: new Date() },
+		startTime: { $gte: new Date() },
 	}).toArray();
 
 	// console.log(events);
