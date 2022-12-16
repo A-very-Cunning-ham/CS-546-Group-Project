@@ -29,4 +29,38 @@ h1 {
     text-decoration: underline;
     font-size:22pt;
     text-align: center;
+    color:#222222;
+}
+.event {
+    border-top:solid #222222 2px;
+    font-size:14pt;
+}
+h2 {
+    margin-left: 50px;
+    font-size:20pt;
+    text-decoration:none;
+    color:#222222;
+}
+.link {
+    text-decoration: none;
+}
+.link:hover {
+    text-decoration : #222222 underline;
+}
+.imgId {
+    width:125px;
+    float:left;
+    margin:10px;
+}
+.labelp {
+    display:inline;
+    font-weight:bold;
+}
+.tag {
+    display:inline;
+    color:cornflowerblue;
+}
+p {
+    color:#222222;
+    margin:5px;
 }
