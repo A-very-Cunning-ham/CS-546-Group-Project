@@ -6,6 +6,8 @@ const users = data.users;
 const events = data.events;
 const helpers = require("../helpers");
 
+const maxImageSizeMB = 16;
+
 router
   .route('/')
   .get(async (req, res) => {
@@ -13,8 +15,13 @@ router
     //the main page
     try{
       if (req.session.user){
+        const userData = await users.getUserData(req.session.user);
+        const upcomingEvents = await events.getUpcomingEvents(userData.college);
         res.render("homepage", {
-          loggedIn: true
+          loggedIn: true,
+          username: req.session.user,
+          college: userData.college,
+          events: upcomingEvents
         });
       } else{
         res.render("homepage", {
@@ -84,11 +91,24 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    try{//when user tries to register, if successful we send them to the login page. Else we render registration page with error
-      const {usernameInput, passwordInput} = req.body;
-      helpers.errorIfNotProperUserName(usernameInput);
-      helpers.errorIfNotProperPassword(passwordInput);
-      let output = await users.createUser(usernameInput, passwordInput);
+		try {
+			//when user tries to register, if successful we send them to the login page. Else we render registration page with error
+			const {
+				usernameInput,
+				passwordInput,
+				firstnameInput,
+				lastnameInput,
+				collegeInput,
+			} = req.body;
+			helpers.errorIfNotProperUserName(usernameInput, "username");
+			helpers.errorIfNotProperPassword(passwordInput, "password");
+			let output = await users.createUser(
+				usernameInput,
+				passwordInput,
+				firstnameInput,
+				lastnameInput,
+				collegeInput
+			);
       if (output.userInserted == true){
         res.redirect("/login");
       }
@@ -99,6 +119,7 @@ router
           error: "Internal Server Error"
         });
       }
+      
     } catch (e) {
       res.status(400);
       res.render("userRegister", {
@@ -139,10 +160,11 @@ router
     }
   })
   .post(async (req, res) => {
+    // TODO: protect this route!
     const createData = req.body;
     try{
-        if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.postedBy || !createData.tags 
-            || !createData.description || !createData.capacity || !createData.college) throw "An input is missing!";
+        if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.tags 
+            || !createData.description || !createData.capacity) throw "An input is missing!";
             helpers.errorIfNotProperString(createData.eventName, "eventName");
             helpers.errorIfNotProperString(createData.location, "location");
             helpers.errorIfNotProperDateTime(createData.startTime);
@@ -150,55 +172,62 @@ router
             if (Date.parse(createData.startTime) >= Date.parse(createData.endTime)) {
               throw `StartTime can't after endTime`;
             }
+
+            let image = req.files.image;
           
-            //check if user exists
-            helpers.errorIfNotProperUserName(createData.postedBy, "postedBy");
-            createData.postedBy = createData.postedBy.trim();
-            let user = await users.getUserData(createData.postedBy);
-            if (!user) throw `No user present with userName: ${createData.postedBy}`;
-          
-            if (createData.tags) {
-              helpers.errorIfNotProperString(createData.tags, "Tags");
-              createData.tags = createData.tags.split(",");
-            }
+            // FIXME: tag validation needs to be set up for checking individual tags, not the whole string
+            // if (createData.tags) {
+            //   helpers.errorIfNotProperString(createData.tags, "Tags");
+            //   // createData.tags = createData.tags.split(",");
+            // }
             helpers.errorIfNotProperString(createData.description, "description");
           
-            helpers.errorIfNotProperString(createData.college, 'college');
-            //college = user.college;
-          
-            helpers.errorIfStringIsNotNumber(capacity);
-            capacity = parseFloat(capacity);
+            helpers.errorIfStringIsNotNumber(createData.capacity);
+            capacity = parseFloat(createData.capacity);
           
             if (capacity < 1 || capacity % 1 > 0) {
               throw `Invalid Capacity provided`;
             }
           
-            if (imageData.size > 1024 * maxImageSizeMB) {
+            if (image.size > (1024 * 1024 * maxImageSizeMB)) {
               throw `Image size must be below ${maxImageSizeMB} MB`;
             }
           
-            if (!imageData.mimetype.contains("image")) {
+            if (!image.mimetype.includes("image")) {
               throw `File must be an image`;
             }
         //rest of error checking all input
+
+        try{
+          let event = await events.createEvent(
+            createData.eventName, 
+            createData.location, 
+            createData.startTime, 
+            createData.endTime, 
+            req.session.user, 
+            createData.tags, 
+            createData.description, 
+            createData.capacity, 
+            image);
+          if(event.eventInserted == true){
+              res.render("createdEvents", {eventName: createData.eventName, location: createData.location, startTime: createData.startTime, endTime: createData.endTime, postedBy: createData.postedBy, tags: createData.tags, 
+                description: createData.description, capacity: createData.capacity, college: createData.college});
+          }
+          else{
+              res.status(500).render("createEvent", {
+                error: "Internal Server Error Try Again"
+              });
+            }
+      }catch(e){
+        console.error(e);
+          res.status(400).render("createEvent", {error: e});
+      }
+
+
     }catch(e){
         res.status(400).render("createEvent", {error: e});
     }
 
-    try{
-        let event = await events.createEvent(createData.eventName, createData.location, createData.startTime, createData.endTime, createData.postedBy, createData.tags, createData.description, createData.capacity, createData.college);
-        if(event.userInserted == true){
-            res.render("createdEvents", {eventName: createData.eventName, location: createData.location, startTime: createData.startTime, endTime: createData.endTime, postedBy: createData.postedBy, tags: createData.tags, 
-              description: createData.description, capacity: createData.capacity, college: createData.college});
-        }
-        else{
-            res.status(500).render("createEvent", {
-              error: "Internal Server Error Try Again"
-            });
-          }
-    }catch(e){
-        res.status(400).render("createEvent", {error: e});
-    }
   });
 
 router
