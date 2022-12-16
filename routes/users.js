@@ -16,12 +16,14 @@ router
     try{
       if (req.session.user){
         const userData = await users.getUserData(req.session.user);
+        console.log(userData);
         const upcomingEvents = await events.getUpcomingEvents(userData.college);
+        console.log(upcomingEvents);
         res.render("homepage", {
           loggedIn: true,
           username: req.session.user,
           college: userData.college,
-          events: upcomingEvents
+          event: upcomingEvents
         });
       } else{
         res.render("homepage", {

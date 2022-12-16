@@ -65,8 +65,8 @@ const createEvent = async (
 	let new_event = {
 		eventName: eventName,
 		location: location,
-		startTime: startTime,
-		endTime: endTime,
+		startTime: new Date(startTime),
+		endTime: new Date(endTime),
 		postedBy: postedBy,
 		tags: tags,
 		description: description,
@@ -75,7 +75,7 @@ const createEvent = async (
 		usersRegistered: [],
 		numFavorite: 0,
 		favoriteUsers: [],
-		image: imageData.data,
+		image: imageData,
 		college: college,
 		comments: [],
 	};
@@ -115,14 +115,20 @@ const getUpcomingEvents = async (college) => {
 	const events = await event_collection_c.find({
 		college: college,
 		startTime: { $gte: new Date() },
-	});
+	}).toArray();
 
+	// console.log(events);
 
 	if (!events) throw "No events found";
 
+	const res = events.map((obj) => {
+		obj.image.data = obj.image.data.toString('base64');
+		return obj;
+	  });
+
 	//   TODO: check if _id needs to be converted to string
 
-	return events;
+	return res;
 };
 
 const deleteEvent = async (id) => {
