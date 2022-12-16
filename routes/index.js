@@ -11,6 +11,7 @@ const constructorMethod = (app) => {
 	app.use("/created", userRoutes);
 	app.use("/favorited", userRoutes);
 	app.use("/events", eventRoutes);
+	app.use("/comments", commentRoutes);
 	// app.use("/events/register/:id", eventRoutes);
 	// app.use("/events/favorite/:id", eventRoutes);
 	// app.use("/comment/event/:id", commentRoutes);

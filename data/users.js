@@ -1,7 +1,9 @@
 const mongoCollections = require("../config/mongoCollections");
+const events = require("./events");
 const helpers = require("../helpers");
 const user_collection = mongoCollections.user_collection;
 const bcrypt = require("bcrypt");
+const { get } = require("../routes/events");
 const saltRounds = 4;
 
 const createUser = async (username, password, firstName, lastName, college) => {
@@ -89,4 +91,21 @@ const getUserData = async (username) => {
 	return user;
 };
 
-module.exports = { createUser, checkUser, getUserData };
+const deregEvent = async (username, id) => {
+	try{
+		helpers.errorIfNotProperID(id, "id");
+		helpers.errorIfNotProperUserName(username, "username");
+	}catch(e){
+		throw "Invalid ID";
+	}
+	const user_collection_c = await user_collection();
+	const userData = getUserData(username);
+	for(let i = 0; i < userData.eventsRegistered.length; i++){
+		if(userData.eventsRegistered[i] == id){
+			userData.eventsRegistered.push(userData.eventsRegistered[i]);
+		}
+	}
+	return userData;
+}
+
+module.exports = { createUser, checkUser, getUserData, deregEvent };

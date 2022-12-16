@@ -121,6 +121,25 @@ const getUpcomingEvents = async (college) => {
 	return events;
 };
 
+const deleteEvent = async (id) => {
+	if (!id) throw "You must provide an ID to search for";
+	if (typeof id !== "string") throw "ID must be a string";
+	if (id.trim().length === 0)
+		throw "ID cannot be an empty string or just spaces";
+	id = id.trim();
+	if (!ObjectId.isValid(id)) throw "invalid object ID";
+
+	const event_collection_c = await event_collection();
+	const event = await getEventById(id);
+	const deletionInfo = await event_collection.deleteOne({_id: ObjectId(id)});
+
+	if(deletionInfo.deletedCount === 0){
+		throw "Could not delete event with id of " + id;
+	}
+	return `${event.eventName} has been succesfully removed`;
+
+};
+
 const registerForEvent = async (username, eventID) => {
 	//TODO: check for conflicting events
 	helpers.errorIfNotProperUserName(username);
@@ -180,5 +199,6 @@ module.exports = {
 	getEventById, 
 	getUpcomingEvents,
 	registerForEvent,
-	favoritedEventsSwitch
+	favoritedEventsSwitch,
+  deleteEvent
 };
