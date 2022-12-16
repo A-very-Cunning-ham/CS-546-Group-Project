@@ -21,7 +21,7 @@ router
         res.status(400);
       }
     })
-  .post(async (req, res) => {
+  .post(async (req, res) => {    //NOT FINISHED
     try{
       if(!req.session.user){
         res.render("/userLogin");

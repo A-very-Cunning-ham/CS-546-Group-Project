@@ -9,7 +9,7 @@ const comments = data.comments;
 
 router
     .route('/:eventId')
-    .post(async (req, res) => {
+    .post(async (req, res) => {     //NOT FINISHED
         try{
             if(req.session.user){
 
@@ -26,6 +26,15 @@ router
             //ec
             if(!req.params.eventId) throw "EventId not provided";
             if(!commentData.userId || !commentData.comment) throw "Input not provided";
+            helpers.errorIfNotProperID(req.params.eventId, 'eventID');
+            req.params.eventId = req.params.eventId.trim();
+            let event = await event_collection_c.findOne({ _id: ObjectId(req.params.eventId) });
+            if (!event) throw `No Event present with id: ${req.params.eventId}`;
+
+            helpers.errorIfNotProperID(commentData.userId, 'userID');
+            commentData.userId = commentData.userId.trim();
+            let user = await user_collection_c.findOne({ _id: ObjectId(commentData.userId) });
+            if (!user) throw `No user present with id: ${commentData.userId}`;
             //
         }catch(e){
             res.status(400);
