@@ -27,5 +27,5 @@ app.use(
 configRoutes(app);
 
 app.listen(3000, () => {
-	console.log("Server is now running");
+	console.log("Server is now running on http://localhost:3000");
 });
