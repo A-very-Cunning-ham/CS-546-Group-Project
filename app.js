@@ -27,6 +27,21 @@ app.use(
 	})
 );
 
+let logger = (req, res, next) => {
+	let current_datetime = new Date().toUTCString();
+
+	let method = req.method;
+	let url = req.originalUrl;
+
+	let auth = req.session.user ? "Authenticated User" : "Non-Authenticated User";
+
+	let log = `[${current_datetime}] ${method}:${url} (${auth})`;
+	console.log(log);
+	next();
+};
+
+app.use(logger);
+
 configRoutes(app);
 
 app.listen(3000, () => {
