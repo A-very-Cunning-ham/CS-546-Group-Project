@@ -28,7 +28,9 @@ router
             if(!req.params.eventId) throw "EventId not provided";
             if(!commentData.comment) throw "Input not provided";
             helpers.errorIfNotProperID(req.params.eventId, 'eventID');
-            helpers.errorIfNotProperName(req.session.user);
+            //helpers.errorIfNotProperName(req.session.user);
+            let user = await users.getUserData(req.session.user);
+
             req.params.eventId = req.params.eventId.trim();
             let event = await event_collection_c.findOne({ _id: ObjectId(req.params.eventId) });
             if (!event) throw `No Event present with id: ${req.params.eventId}`;
