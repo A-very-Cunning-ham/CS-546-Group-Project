@@ -10,18 +10,46 @@ router
   .route('/:id')
   .get(async (req, res) => {
     try{
-        if(!req.params.id) throw "Event ID not given";
+      if(!req.params.id) throw "Event ID not given";
         //more error checking
     }catch(e){
         res.status(400);
     }
     try{
-        //let eventInfo = await events.getEvent(req.params.id);
-        res.render("eventDetails", {info: eventInfo});
+        let eventInfo = await events.getEventById(req.params.id);
+        if(req.session.user == eventInfo.postedBy){
+          res.render("eventDetails", {info: eventInfo, usersRegistered: eventInfo.usersRegistered});
+        }
+        else{
+          res.render("eventDetails", {info: eventInfo});
+        }
       }catch(e){
         res.status(400);
       }
-    });
+    })
+  .post(async (req, res) => {    
+    try{
+      if(!req.session.user){
+        res.render("/userLogin");
+      }
+    }catch(e){
+      res.status(400);
+    }
+    try{
+      if(!req.params.id) throw "Event ID not given";
+      //more error checking
+  }catch(e){
+      res.status(400);
+  }
+  try{
+      let deReg = await users.deregEvent(req.session.user, req.params.id);    
+      let eventInfo = await events.getEventById(req.params.id);
+      res.render("eventDetails", {info: eventInfo});
+    }catch(e){
+      res.status(400);
+    }
+  });
+    
 
 router
   .route('/register/:id')

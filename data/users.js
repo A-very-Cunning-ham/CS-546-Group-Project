@@ -89,4 +89,21 @@ const getUserData = async (username) => {
 	return user;
 };
 
-module.exports = { createUser, checkUser, getUserData };
+const deregEvent = async (username, id) => {
+	try{
+		helpers.errorIfNotProperID(id, "id");
+		helpers.errorIfNotProperUserName(username, "username");
+	}catch(e){
+		throw "Invalid ID";
+	}
+	const user_collection_c = await user_collection();
+	const userData = await getUserData(username);
+	for(let i = 0; i < userData.eventsRegistered.length; i++){
+		if(userData.eventsRegistered[i] == id){
+			userData.eventsRegistered.push(userData.eventsRegistered[i]);
+		}
+	}
+	return userData;
+}
+
+module.exports = { createUser, checkUser, getUserData, deregEvent };
