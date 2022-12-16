@@ -3,7 +3,6 @@ const events = require("./events");
 const helpers = require("../helpers");
 const user_collection = mongoCollections.user_collection;
 const bcrypt = require("bcrypt");
-const { get } = require("../routes/events");
 const saltRounds = 4;
 
 const createUser = async (username, password, firstName, lastName, college) => {
