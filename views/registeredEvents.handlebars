@@ -1,7 +1,7 @@
 <h1>Your Registered Events</h1>
 <ul class="event">
     {{#each registered}}
-        <a href="/{{id}}"><h2>{{eventName}}</h2></a>
+        <a href="/{{_id}}"><h2>{{eventName}}</h2></a>
         <img src="data:{{image.mimetype}};base64,{{image.data}}" alt="event image" class="imgId">
         <p>Location: {{location}}</p>
         <p>from {{startTime}} to {{endTime}}</p>
