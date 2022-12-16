@@ -34,6 +34,7 @@ h1 {
 .event {
     border-top:solid #222222 2px;
     font-size:14pt;
+    padding: bottom 20px;
 }
 h2 {
     margin-left: 50px;
@@ -48,7 +49,8 @@ h2 {
     text-decoration : #222222 underline;
 }
 .imgId {
-    width:125px;
+    height:150px;
+    max-width:500px;
     float:left;
     margin:10px;
 }
