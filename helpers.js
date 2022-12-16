@@ -106,7 +106,7 @@ function errorIfNotProperPassword(val, variableName) {
 	}
 
 	if (!upper_chr_present) {
-		throw `${variableName || 'Input String'} does not contains upper case`;
+		throw `${variableName || 'Input String'} does not contain upper case`;
 	}
 
 	//number
@@ -124,7 +124,7 @@ function errorIfNotProperPassword(val, variableName) {
 	}
 
 	if (!num_chr_present) {
-		throw `${variableName || 'Input String'} does not contains upper case`;
+		throw `${variableName || 'Input String'} does not contain upper case`;
 	}
 
 	if (val.length < 6) {

@@ -84,11 +84,24 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    try{//when user tries to register, if successful we send them to the login page. Else we render registration page with error
-      const {usernameInput, passwordInput} = req.body;
-      helpers.errorIfNotProperUserName(usernameInput);
-      helpers.errorIfNotProperPassword(passwordInput);
-      let output = await users.createUser(usernameInput, passwordInput);
+		try {
+			//when user tries to register, if successful we send them to the login page. Else we render registration page with error
+			const {
+				usernameInput,
+				passwordInput,
+				firstnameInput,
+				lastnameInput,
+				collegeInput,
+			} = req.body;
+			helpers.errorIfNotProperUserName(usernameInput, "username");
+			helpers.errorIfNotProperPassword(passwordInput, "password");
+			let output = await users.createUser(
+				usernameInput,
+				passwordInput,
+				firstnameInput,
+				lastnameInput,
+				collegeInput
+			);
       if (output.userInserted == true){
         res.redirect("/login");
       }
@@ -99,6 +112,7 @@ router
           error: "Internal Server Error"
         });
       }
+      
     } catch (e) {
       res.status(400);
       res.render("userRegister", {
