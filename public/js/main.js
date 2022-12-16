@@ -1,1 +1,1 @@
-//Use this to change the header for guest users and logged-in users
+//Probably not going to be used
