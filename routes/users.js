@@ -11,6 +11,20 @@ router
   .get(async (req, res) => {
     //code here for GET
     //the main page
+    try{
+      if (req.session.user){
+        res.render("homepage", {
+          loggedIn: true
+        });
+      } else{
+        res.render("homepage", {
+          loggedIn: false
+        });
+      }
+    }
+    catch (e){
+      res.status(400);
+    }
   })
 
 router

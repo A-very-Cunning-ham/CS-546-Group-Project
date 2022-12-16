@@ -121,4 +121,64 @@ const getUpcomingEvents = async (college) => {
 	return events;
 };
 
-module.exports = {createEvent, getEventById, getUpcomingEvents};
+const registerForEvent = async (username, eventID) => {
+	//TODO: check for conflicting events
+	helpers.errorIfNotProperUserName(username);
+	const event_collection_c = await event_collection();
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+
+	let res = await event_collection_c.updateOne(
+		{ _id: ObjectId(eventID) },
+		{ $push: { usersRegistered: username } }
+	);
+
+	if (res.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { userInserted: true };
+	}
+}
+
+const favoritedEventsSwitch = async (username, eventID) => {
+	helpers.errorIfNotProperUserName(username);
+	const event_collection_c = await event_collection();
+	const user_collection_c = await user_collection();
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+
+	let user = await user_collection_c.findOne({username: username});
+	if (!user) throw "Could not find user";
+
+	let res = "";
+
+	if (user.favoritedEvents.includes(eventID)){
+		res = await user_collection_c.updateOne(
+			{ username: username },
+			{ $pull: { favoritedEvents: eventID } }
+		);
+	} else{
+		res = await user_collection_c.updateOne(
+			{ username: username },
+			{ $push: { favoritedEvents: eventID } }
+		);
+	}
+
+	if (res.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { favoritedEventSwitched: true };
+	}
+}
+
+module.exports = {
+	createEvent, 
+	getEventById, 
+	getUpcomingEvents,
+	registerForEvent,
+	favoritedEventsSwitch
+};
