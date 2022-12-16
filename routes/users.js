@@ -56,7 +56,6 @@ router
   .post(async (req, res) => {
     //when user tries to log in, if successful we send them to homepage. If username or password incorrect, we render the login page again with an error
     try{
-      // TODO: add validation
       const {usernameInput, passwordInput} = req.body;
       helpers.errorIfNotProperUserName(usernameInput);
       helpers.errorIfNotProperPassword(passwordInput);
@@ -69,7 +68,7 @@ router
       res.status(400);
       res.render("userLogin", {
         title: "userLogin",
-        error: e
+        error: "Username or password is incorrect"
       });
     }
   })
