@@ -2,7 +2,7 @@
 <ul class="event">
     {{#each favorited}}
         <h2>{{eventName}}</h2>
-        <img src="{{image}}" alt="event image" class="imgId">
+        <img src="data:{{image.mimetype}};base64,{{image.data}}" alt="event image" class="imgId">
         <p>Location: {{location}}</p>
         <p>from {{startTime}} to {{endTime}}</p>
         <p>Posted by {{postedBy}}</p>
