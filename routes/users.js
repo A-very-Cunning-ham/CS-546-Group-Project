@@ -4,13 +4,27 @@ const bcrypt = require("bcrypt");
 const data = require("../data");
 const users = data.users;
 const events = data.events;
-
+const helpers = require("../helpers");
 
 router
   .route('/')
   .get(async (req, res) => {
     //code here for GET
     //the main page
+    try{
+      if (req.session.user){
+        res.render("homepage", {
+          loggedIn: true
+        });
+      } else{
+        res.render("homepage", {
+          loggedIn: false
+        });
+      }
+    }
+    catch (e){
+      res.status(400);
+    }
   })
 
 router
@@ -34,7 +48,9 @@ router
     //when user tries to log in, if successful we send them to homepage. If username or password incorrect, we render the login page again with an error
     try{
       // TODO: add validation
-      
+      const {usernameInput, passwordInput} = req.body;
+      helpers.errorIfNotProperUserName(usernameInput);
+      helpers.errorIfNotProperPassword(passwordInput);
       let output = await users.checkUser(usernameInput, passwordInput);
       if (output.authenticatedUser==true){
         req.session.user = usernameInput;
@@ -70,6 +86,8 @@ router
     //code here for POST
     try{//when user tries to register, if successful we send them to the login page. Else we render registration page with error
       const {usernameInput, passwordInput} = req.body;
+      helpers.errorIfNotProperUserName(usernameInput);
+      helpers.errorIfNotProperPassword(passwordInput);
       let output = await users.createUser(usernameInput, passwordInput);
       if (output.userInserted == true){
         res.redirect("/login");
@@ -125,6 +143,43 @@ router
     try{
         if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.postedBy || !createData.tags 
             || !createData.description || !createData.capacity || !createData.college) throw "An input is missing!";
+            helpers.errorIfNotProperString(createData.eventName, "eventName");
+            helpers.errorIfNotProperString(createData.location, "location");
+            helpers.errorIfNotProperDateTime(createData.startTime);
+            helpers.errorIfNotProperDateTime(createData.endTime);
+            if (Date.parse(createData.startTime) >= Date.parse(createData.endTime)) {
+              throw `StartTime can't after endTime`;
+            }
+          
+            //check if user exists
+            helpers.errorIfNotProperUserName(createData.postedBy, "postedBy");
+            createData.postedBy = createData.postedBy.trim();
+            let user = await users.getUserData(createData.postedBy);
+            if (!user) throw `No user present with userName: ${createData.postedBy}`;
+          
+            if (createData.tags) {
+              helpers.errorIfNotProperString(createData.tags, "Tags");
+              createData.tags = createData.tags.split(",");
+            }
+            helpers.errorIfNotProperString(createData.description, "description");
+          
+            helpers.errorIfNotProperString(createData.college, 'college');
+            //college = user.college;
+          
+            helpers.errorIfStringIsNotNumber(capacity);
+            capacity = parseFloat(capacity);
+          
+            if (capacity < 1 || capacity % 1 > 0) {
+              throw `Invalid Capacity provided`;
+            }
+          
+            if (imageData.size > 1024 * maxImageSizeMB) {
+              throw `Image size must be below ${maxImageSizeMB} MB`;
+            }
+          
+            if (!imageData.mimetype.contains("image")) {
+              throw `File must be an image`;
+            }
         //rest of error checking all input
     }catch(e){
         res.status(400).render("createEvent", {error: e});
