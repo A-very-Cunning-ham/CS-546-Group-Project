@@ -9,7 +9,7 @@ const comments = data.comments;
 
 router
     .route('/:eventId')
-    .post(async (req, res) => {     //NOT FINISHED
+    .post(async (req, res) => {    
         try{
             if(req.session.user){
 

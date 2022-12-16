@@ -225,7 +225,7 @@ router
         res.status(400);
       }
     })
-    .post(async (req,res) => {    //NOT FINISHED
+    .post(async (req,res) => {    
       try{
         if(req.session.user){
 

@@ -9,19 +9,24 @@ router
   .route('/:id')
   .get(async (req, res) => {
     try{
-        if(!req.params.id) throw "Event ID not given";
+      if(!req.params.id) throw "Event ID not given";
         //more error checking
     }catch(e){
         res.status(400);
     }
     try{
         let eventInfo = await events.getEventById(req.params.id);
-        res.render("eventDetails", {info: eventInfo});
+        if(req.session.user == eventInfo.postedBy){
+          res.render("eventDetails", {info: eventInfo, usersRegistered: eventInfo.usersRegistered});
+        }
+        else{
+          res.render("eventDetails", {info: eventInfo});
+        }
       }catch(e){
         res.status(400);
       }
     })
-  .post(async (req, res) => {    //NOT FINISHED
+  .post(async (req, res) => {    
     try{
       if(!req.session.user){
         res.render("/userLogin");
@@ -36,7 +41,7 @@ router
       res.status(400);
   }
   try{
-      let deReg = await users.deregEvent(req.params.id);    //need username of user
+      let deReg = await users.deregEvent(req.session.user, req.params.id);    
       let eventInfo = await events.getEventById(req.params.id);
       res.render("eventDetails", {info: eventInfo});
     }catch(e){
