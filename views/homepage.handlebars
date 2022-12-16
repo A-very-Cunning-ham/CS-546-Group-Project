@@ -1,6 +1,11 @@
-<h1>Your Favorite Events</h1>
+{{#if loggedIn}}
+    <h1>Events At {{college}}</h1>
+{{else}}
+    <h1>Welcome!</h1>
+    <p>For events tailored to your location, please create an account or log in with your existing account.</p>
+{{/if}}
 <ul class="event">
-    {{#each favorited}}
+    {{#each event}}
         <h2>{{eventName}}</h2>
         <img src="{{image}}" alt="event image" class="imgId">
         <p>Location: {{location}}</p>
