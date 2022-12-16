@@ -1,21 +1,22 @@
 <h1>Create Event</h1>
 
-<form method="POST" action="/create" id="createevent-form">
-    <label for="eventNameInput">Event name:</label>
-    <input type="text" id="eventNameInput" name="eventNameInput">
-    <label for="locationInput">Location:</label>
-    <input type="text" id="locationInput" name="locationInput">
-    <label for="startTimeInput">Start time:</label>
-    <input type="datetime-local" id="startTimeInput" name="startTimeInput">
-    <label for="endTimeInput">End time:</label>
-    <input type="datetime-local" id="endTimeInput" name="endTimeInput">
-    <label for="descriptionInput">Description:</label>
-    <input type="text" id="descriptionInput" name="descriptionInput">
-    <label for="capacityInput">Capacity:</label>
-    <input type="number" min="1" id="capacityInput" name="capacityInput">
-    <label for="tagsInput">Tags:</label>
-    <input type="text" id="tagsInput" name="tagsInput">
-    <label for="imageInput">Upload image here:</label>
-    <input type="file" id="imageInput" name="imageInput" accept="image/png, image/jpeg">
+<form method="POST" action="/create" id="createevent-form" encType="multipart/form-data">
+    <label for="eventName">Event name:</label>
+    <input type="text" id="eventName" name="eventName">
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location">
+    <label for="startTime">Start time:</label>
+    <input type="datetime-local" id="startTime" name="startTime">
+    <label for="endTime">End time:</label>
+    <input type="datetime-local" id="endTime" name="endTime">
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description">
+    <label for="capacity">Capacity:</label>
+    <input type="number" min="1" id="capacity" name="capacity">
+    <label for="tags">Tags:</label>
+    <input type="text" id="tags" name="tags">
+    <label for="image">Upload image here:</label>
+    <input type="file" id="image" name="image">
+    <button type="submit">submit</button>
 </form>
 <p>{{error}}</p>

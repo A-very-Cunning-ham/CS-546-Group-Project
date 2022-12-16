@@ -38,11 +38,14 @@ const createEvent = async (
 	if (tags) {
 		helpers.errorIfNotProperString(tags, "Tags");
 		tags = tags.split(",");
+		// TODO: trim whitespace
 	}
 	helpers.errorIfNotProperString(description, "description");
 
-	helpers.errorIfNotProperString(college, 'college');
-	//college = user.college;
+
+	let userData = await users.getUserData(postedBy);
+	let college = userData.college;
+
 
 	helpers.errorIfStringIsNotNumber(capacity);
 	capacity = parseFloat(capacity);
@@ -51,11 +54,11 @@ const createEvent = async (
 		throw `Invalid Capacity provided`;
 	}
 
-	if (imageData.size > 1024 * maxImageSizeMB) {
+	if (imageData.size > 1024 * 1024 * maxImageSizeMB) {
 		throw `Image size must be below ${maxImageSizeMB} MB`;
 	}
 
-	if (!imageData.mimetype.contains("image")) {
+	if (!imageData.mimetype.includes("image")) {
 		throw `File must be an image`;
 	}
 
@@ -72,7 +75,7 @@ const createEvent = async (
 		usersRegistered: [],
 		numFavorite: 0,
 		favoriteUsers: [],
-		image: image.data,
+		image: imageData.data,
 		college: college,
 		comments: [],
 	};
@@ -113,6 +116,7 @@ const getUpcomingEvents = async (college) => {
 		college: college,
 		startTime: { $gte: new Date() },
 	});
+
 
 	if (!events) throw "No events found";
 
@@ -200,5 +204,5 @@ module.exports = {
 	getUpcomingEvents,
 	registerForEvent,
 	favoritedEventsSwitch,
-  deleteEvent
+	deleteEvent
 };

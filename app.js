@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const session = require("express-session");
 const configRoutes = require("./routes");
+const fileUpload = require('express-fileupload');
 
 const exphbs = require("express-handlebars");
 
@@ -11,6 +12,8 @@ const cookieParser = require("cookie-parser");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(fileUpload());
 
 app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");

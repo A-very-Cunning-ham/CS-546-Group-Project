@@ -1,5 +1,4 @@
 const mongoCollections = require("../config/mongoCollections");
-const events = require("./events");
 const helpers = require("../helpers");
 const user_collection = mongoCollections.user_collection;
 const bcrypt = require("bcrypt");
@@ -98,7 +97,7 @@ const deregEvent = async (username, id) => {
 		throw "Invalid ID";
 	}
 	const user_collection_c = await user_collection();
-	const userData = getUserData(username);
+	const userData = await getUserData(username);
 	for(let i = 0; i < userData.eventsRegistered.length; i++){
 		if(userData.eventsRegistered[i] == id){
 			userData.eventsRegistered.push(userData.eventsRegistered[i]);
