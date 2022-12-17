@@ -232,10 +232,7 @@ router
             createData.capacity, 
             image);
           if(event.eventInserted == true){
-              res.render("createdEvents", {eventName: createData.eventName, location: createData.location, startTime: createData.startTime, endTime: createData.endTime, postedBy: createData.postedBy, tags: createData.tags, 
-                description: createData.description, capacity: createData.capacity, college: createData.college,
-                title: "Created Events", loggedIn: true
-              });
+            res.redirect("/created");
           }
           else{
               res.status(500).render("createEvent", {
