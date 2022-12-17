@@ -11,12 +11,12 @@ router
     .route('/:eventId')
     .post(async (req, res) => {    
         try{
-            if(req.session.user){
-
-            }
-            else{
-                res.redirect("/login");
-                //maybe send error message
+            if(!req.session.user){
+                res.render("/userLogin",{
+                    title: "Login",
+                    loggedIn: false,
+                    error: "Please log in first"
+                });
             }
         }catch(e){
             res.status(400);
@@ -48,7 +48,11 @@ router
             const { userId, comment } = commentData;
             const newComment = await comments.createComment(req.params.eventId, userId, comment);
             const getEvent = await events.getEventById(req.params.id);
-            res.render("eventDetails", {info: getEvent});
+            res.render("eventDetails", {
+                title: "Event Details",
+                loggedIn: true,
+                info: getEvent
+            });
         }catch(e){
             res.status(400);
         }

@@ -27,6 +27,7 @@ router
         });
       } else{
         res.render("homepage", {
+          title: "Homepage",
           loggedIn: false
         });
       }
@@ -45,7 +46,9 @@ router
         res.redirect("/");
       } else{
         res.render("userLogin", {
-          title: "userLogin"
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
         });
       }
     }
@@ -67,7 +70,8 @@ router
     } catch (e){
       res.status(400);
       res.render("userLogin", {
-        title: "userLogin",
+        title: "Login",
+        loggedIn: false,
         error: "Username or password is incorrect"
       });
     }
@@ -82,7 +86,8 @@ router
         res.redirect("/");
       } else{
         res.render("userRegister", {
-          title: "userRegister"
+          title: "Register",
+          loggedIn: false
         });
       }
     }
@@ -116,7 +121,8 @@ router
       else{
         res.status(500);
         res.render("userRegister", {
-          title: userRegister,
+          title: "Register",
+          loggedIn: false,
           error: "Internal Server Error"
         });
       }
@@ -124,7 +130,8 @@ router
     } catch (e) {
       res.status(400);
       res.render("userRegister", {
-        title: "userRegister",
+        title: "Register",
+        loggedIn: false,
         error: e
       });
     }
@@ -140,7 +147,10 @@ router
         return;
       }
       req.session.destroy();
-      res.render("logout");
+      res.render("logout", {
+        title: "Register",
+        loggedIn: false
+      });
     } catch(e){
       res.status(400);
     }
@@ -149,12 +159,17 @@ router
 router
   .route('/create')
   .get(async (req, res) => {
+    //if not logged in, redirect to login?
+    //if any error w input, render form again with error message
+    //if successful, render GET /created
     try{
-        if(req.session.user){
-            res.render("createEvent");
+        if(!req.session.user){
+          res.redirect("/login");
         }else{
-            res.redirect("/login");
-            //maybe add something for error message in "/login" so that when user is redirected, they know why. Or we could render the page with the error here.
+          res.render("createEvent",{
+            title: "Create An Event",
+            loggedIn: true
+          });
         }
     }catch(e){
         res.status(400);
@@ -164,6 +179,10 @@ router
     // TODO: protect this route!
     const createData = req.body;
     try{
+        if(!req.session.user){
+          res.redirect("/login");
+          return;
+        }
         if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.tags 
             || !createData.description || !createData.capacity) throw "An input is missing!";
             helpers.errorIfNotProperString(createData.eventName, "eventName");
@@ -176,11 +195,11 @@ router
 
             let image = req.files.image;
           
-            // FIXME: tag validation needs to be set up for checking individual tags, not the whole string
-            // if (createData.tags) {
-            //   helpers.errorIfNotProperString(createData.tags, "Tags");
-            //   // createData.tags = createData.tags.split(",");
-            // }
+            for (let i=0;i<createData.tags.length;i++){//goes through tags array and checks each to see if it s a valid string and trims them
+              helpers.errorIfNotProperString(createData.tags[i], "tags");
+              createData.tags[i] = createData.tags[i].trim();
+            }
+
             helpers.errorIfNotProperString(createData.description, "description");
           
             helpers.errorIfStringIsNotNumber(createData.capacity);
@@ -237,11 +256,13 @@ router
     try{
       if(req.session.user){
         //function from events.js to get all events that a user is registered for, then pass in result to render page
-        res.render("registeredEvents");
+        res.render("registeredEvents", {
+          title: "Registered Events",
+          loggedIn: true
+        });
       }
       else{
         res.redirect("/login");
-        //maybe send an error message somehow
       }
     }catch(e){
       res.status(400);
@@ -253,7 +274,6 @@ router
       }
       else{
         res.redirect("login");
-        //maybe send error message
       }
     }catch(e){
         res.status(400);
@@ -279,11 +299,13 @@ router
       try{
         if(req.session.user){
           //function to get all the events a user has created, then pass in result to render page
-          res.render("createdEvents");
+          res.render("createdEvents", {
+            title: "Created Events",
+            loggedIn: true
+          });
         }
         else{
           res.redirect("/login");
-          //maybe send an error message somehow
         }
       }catch(e){
         res.status(400);
@@ -295,7 +317,6 @@ router
     .get(async (req, res) => {
       if(!req.session.user){
         res.redirect("/login");
-        //maybe send an error message somehow
       }
       try{
         if(!req.params.id) throw "Event ID not given";
@@ -305,7 +326,11 @@ router
       }
       try{
         let info = await events.getEventById(req.params.id);   
-        res.render("eventId", {info: info});
+        res.render("eventId", {
+          title: "Event Details",
+          loggedIn: true,
+          info: info
+        });
       }catch(e){
         res.status(400);
       }
@@ -317,7 +342,6 @@ router
         }
         else{
           res.redirect("login");
-          //maybe send error message
         }
       }catch(e){
           res.status(400);
@@ -341,11 +365,14 @@ router
     .get(async (req, res) => {
       if(!req.session.user){
         res.redirect("/login");
-        //maybe send an error message somehow
       }
       try{
-        //let favorited = await users.getFavorited
-        res.render("favorited", {favorited: favorited});
+        let favorited = await users.getFavorited
+        res.render("favorited", {
+          title: "Favorited Events",
+          loggedIn: true,
+          favorited: favorited
+        });
       }catch(e){
         res.status(400);
       }
