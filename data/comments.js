@@ -47,6 +47,7 @@ const createComment = async (eventID, userName, comment) => {
 };
 
 const getAllCommentForEvent = async (eventID) => {
+	// FIXME: will this even be used? we will just be showing comments on the event details page where this data is already returned
 	const event_collection_c = await event_collection();
 
 	//check if event exists

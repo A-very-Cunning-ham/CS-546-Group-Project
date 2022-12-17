@@ -4,6 +4,7 @@ const mongoCollections = require("../config/mongoCollections");
 const user_collection = mongoCollections.user_collection;
 const event_collection = mongoCollections.event_collection;
 const { ObjectId } = require("mongodb");
+const constructorMethod = require('../routes');
 
 const maxImageSizeMB = 5;
 
@@ -26,7 +27,7 @@ const createEvent = async (
 	helpers.errorIfNotProperDateTime(startTime);
 	helpers.errorIfNotProperDateTime(endTime);
 	if (Date.parse(startTime) >= Date.parse(endTime)) {
-		throw `StartTime can't after endTime`;
+		throw `StartTime can't come after endTime`;
 	}
 
 	//check if user exists
@@ -141,7 +142,7 @@ const deleteEvent = async (id) => {
 
 	const event_collection_c = await event_collection();
 	const event = await getEventById(id);
-	const deletionInfo = await event_collection.deleteOne({_id: ObjectId(id)});
+	const deletionInfo = await event_collection_c.deleteOne({_id: ObjectId(id)});
 
 	if(deletionInfo.deletedCount === 0){
 		throw "Could not delete event with id of " + id;
@@ -204,11 +205,46 @@ const favoritedEventsSwitch = async (username, eventID) => {
 	}
 }
 
+const getFavorites = async (username) => {
+	try {
+		helpers.errorIfNotProperUserName(username, "username");
+	} catch (e) {
+		throw `Invalid username`;
+	}
+
+
+	try{
+		let user = await users.getUserData(username);
+	
+		if(!user.favoriteEvents){
+			throw "User has no favorite events";
+		}
+	
+		const res = await Promise.all(user.favoriteEvents.map(async (obj) => {
+			obj = obj.toString();
+
+			let event = await getEventById(obj);
+			event.image.data = event.image.data.toString('base64');
+
+			return event;
+		  }));
+
+		  if (!res) throw "No events found";
+
+		return res;
+
+	}catch(e){
+		throw e;
+	}
+
+};
+
 module.exports = {
 	createEvent, 
 	getEventById, 
 	getUpcomingEvents,
 	registerForEvent,
 	favoritedEventsSwitch,
-	deleteEvent
+	deleteEvent,
+	getFavorites
 };
