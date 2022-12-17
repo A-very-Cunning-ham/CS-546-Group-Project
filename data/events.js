@@ -272,6 +272,36 @@ const getRegistered = async (username) => {
 
 };
 
+const getEventsCreatedBy = async (username) => {
+	try {
+		helpers.errorIfNotProperUserName(username, "username");
+	} catch (e) {
+		throw `Invalid username`;
+	}
+
+	try{
+		const event_collection_c = await event_collection();
+		console.log(username);
+		username = username.toLowerCase().trim();
+		const events = await event_collection_c.find({
+			postedBy: username
+		}).toArray();
+	
+		if (!events) throw "No events found";
+	
+		const res = events.map((obj) => {
+			obj.image.data = obj.image.data.toString('base64');
+			return obj;
+		  });
+		
+		return res;
+
+	}catch(e){
+		throw e;
+	}
+
+};
+
 module.exports = {
 	createEvent, 
 	getEventById, 
@@ -280,5 +310,6 @@ module.exports = {
 	favoritedEventsSwitch,
 	deleteEvent,
 	getFavorites,
-	getRegistered
+	getRegistered,
+	getEventsCreatedBy
 };
