@@ -62,6 +62,7 @@ router
       res.status(400);
   }
   try{
+    // FIXME: what's this route doing? seems to deregister but we probably want that in its own route, not /:id
       let deReg = await users.deregEvent(req.session.user, req.params.id);    
       let eventInfo = await events.getEventById(req.params.id);
       res.render("eventDetails", {

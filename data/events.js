@@ -160,7 +160,9 @@ const deleteEvent = async (id) => {
 const registerForEvent = async (username, eventID) => {
 	//TODO: check for conflicting events
 	helpers.errorIfNotProperUserName(username);
+	username = username.trim().toLowerCase();
 	const event_collection_c = await event_collection();
+	const user_collection_c = await user_collection();
 	helpers.errorIfNotProperID(eventID, 'eventID');
 	eventID = eventID.trim();
 	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
@@ -168,24 +170,39 @@ const registerForEvent = async (username, eventID) => {
 
 		// TODO: test these conditions
 		let alreadyRegistered = await getRegistered(username);
+		
 
 		for(let toCompareEvent of alreadyRegistered){
+
+			if(event._id == toCompareEvent._id){
+				console.log("already registered for this event")
+				throw "Already registered for this event";
+			}
+
 			if((event.startTime <= toCompareEvent.endTime) && (event.endTime >= toCompareEvent.startTime)){
+				console.log("conflicting events")
 				throw "Can't register for events with overlapping times";
 			}
 		}
 
 		if(event.numUserRegistered >= event.capacity){
+			console.log("Capacity reached")
 			throw "Event capacity already reached, can't register";
 		}
+		console.log("no errors")
 
-	let res = await event_collection_c.updateOne(
+	let eventUpdated = await event_collection_c.updateOne(
 		{ _id: ObjectId(eventID) },
-		{ $push: { usersRegistered: username } },
-		{ $inc: { numUserRegistered: 1} }
+		{$push: { usersRegistered: username } ,
+		 $inc: { numUserRegistered: 1}}
 	);
 
-	if (res.acknowledged == false) {
+	let userUpdated = await user_collection_c.updateOne(
+		{ username: username },
+		{$push: { eventsRegistered: eventID }}
+	);
+
+	if (eventUpdated.acknowledged == false || userUpdated.acknowledged == false) {
 		throw `Server Error`;
 	} else {
 		return { userInserted: true };
