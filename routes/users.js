@@ -16,9 +16,9 @@ router
     try{
       if (req.session.user){
         const userData = await users.getUserData(req.session.user);
-        console.log(userData);
+        // console.log(userData);
         const upcomingEvents = await events.getUpcomingEvents(userData.college);
-        console.log(upcomingEvents);
+        // console.log(upcomingEvents);
         res.render("homepage", {
           loggedIn: true,
           username: req.session.user,
@@ -260,7 +260,7 @@ router
         res.render("registeredEvents", {
           title: "Registered Events",
           loggedIn: true,
-          registered: registered 
+          event: registered 
         });
       }
       else{
@@ -301,9 +301,15 @@ router
       try{
         if(req.session.user){
           //function to get all the events a user has created, then pass in result to render page
+
+          // TODO: load this data
+          let createdEvents = await events.getEventsCreatedBy(req.session.user);
+          console.log(createdEvents);
+
           res.render("createdEvents", {
             title: "Created Events",
-            loggedIn: true
+            loggedIn: true,
+            event: createdEvents
           });
         }
         else{
@@ -373,7 +379,7 @@ router
         res.render("favorited", {
           title: "Favorited Events",
           loggedIn: true,
-          favorited: favorited
+          event: favorited
         });
 
       }catch(e){
