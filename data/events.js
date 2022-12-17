@@ -32,7 +32,7 @@ const createEvent = async (
 
 	//check if user exists
 	helpers.errorIfNotProperUserName(postedBy, "postedBy");
-	postedBy = postedBy.trim();
+	postedBy = postedBy.toLowerCase().trim();
 	let user = await users.getUserData(postedBy);
 	if (!user) throw `No user present with userName: ${postedBy}`;
 
@@ -108,17 +108,23 @@ const getEventById = async (id) => {
 };
 
 const getUpcomingEvents = async (college) => {
-	helpers.errorIfNotProperString(college, "College");
-
-	college = college.trim();
 
 	const event_collection_c = await event_collection();
-	const events = await event_collection_c.find({
-		college: college,
-		startTime: { $gte: new Date() },
-	}).toArray();
+	if(college){
+		helpers.errorIfNotProperString(college, "College");
+		college = college.trim();
+	
+		var events = await event_collection_c.find({
+			college: college,
+			startTime: { $gte: new Date() },
+		}).toArray();
+	}else{
+		var events = await event_collection_c.find({
+			startTime: { $gte: new Date() },
+		}).toArray();
 
-	// console.log(events);
+	}
+
 
 	if (!events) throw "No events found";
 

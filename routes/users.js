@@ -26,9 +26,11 @@ router
           event: upcomingEvents
         });
       } else{
+        const upcomingEvents = await events.getUpcomingEvents();
         res.render("homepage", {
           title: "Homepage",
-          loggedIn: false
+          loggedIn: false,
+          event: upcomingEvents
         });
       }
     }
