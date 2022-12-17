@@ -1,6 +1,6 @@
 <div class="event">
     {{#each event}}
-        <a href="/{{_id}}" class="link"><h2>{{eventName}}</h2></a>
+        <a href="/events/{{_id}}" class="link"><h2>{{eventName}}</h2></a>
         <img src="data:{{image.mimetype}};base64,{{image.data}}" alt="event image" class="imgId">
         <p class="labelp">Location:</p> {{location}} <br>
         <p class="labelp">from</p> {{startTime}} <p class="labelp">to</p> {{endTime}} <br>
