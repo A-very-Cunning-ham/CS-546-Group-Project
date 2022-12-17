@@ -7,21 +7,37 @@ const users = data.users;
 const events = data.events;
 
 router
-  .route('/:id')
+  .route('/:id')//not working
   .get(async (req, res) => {
     try{
       if(!req.params.id) throw "Event ID not given";
         //more error checking
+      if (!req.session.user){
+        res.render("/userLogin",{
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        })
+        return;
+      }
     }catch(e){
         res.status(400);
     }
     try{
         let eventInfo = await events.getEventById(req.params.id);
         if(req.session.user == eventInfo.postedBy){
-          res.render("eventDetails", {info: eventInfo, usersRegistered: eventInfo.usersRegistered});
+          res.render("eventDetails", {
+            title: "Event Details",
+            loggedIn: true,
+            info: eventInfo, usersRegistered: eventInfo.usersRegistered
+          });
         }
         else{
-          res.render("eventDetails", {info: eventInfo});
+          res.render("eventDetails", {
+            title: "Event Details",
+            loggedIn: true,
+            info: eventInfo
+          });
         }
       }catch(e){
         res.status(400);
@@ -30,7 +46,11 @@ router
   .post(async (req, res) => {    
     try{
       if(!req.session.user){
-        res.render("/userLogin");
+        res.render("/userLogin",{
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
       }
     }catch(e){
       res.status(400);
@@ -44,7 +64,11 @@ router
   try{
       let deReg = await users.deregEvent(req.session.user, req.params.id);    
       let eventInfo = await events.getEventById(req.params.id);
-      res.render("eventDetails", {info: eventInfo});
+      res.render("eventDetails", {
+        title: "Login",
+        loggedIn: false,
+        info: eventInfo
+      });
     }catch(e){
       res.status(400);
     }
@@ -62,12 +86,19 @@ router
     }
     try{
       if (!req.session.user){
-        res.render("userLogin", {error: "You are not logged in"});
+        res.render("userLogin", {
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
         return;
       }
       let register = await events.registerForEvent(req.session.user, req.params.id);
       if (register.userInserted==true){
-        res.render("registeredEvents");
+        res.render("registeredEvents", {
+          title: "Registered Events",
+          loggedIn: true
+        });
       }else{
         throw "Was not able to register for event";
       }
@@ -76,7 +107,7 @@ router
     }
   });
 
-router//NOT DONE
+router
   .route('/favorite/:id')
   .post(async (req, res) => {
     try{
@@ -87,12 +118,16 @@ router//NOT DONE
     }
     try{
       if (!req.session.user){
-        res.render("userLogin", {error: "You are not logged in"});
+        res.render("userLogin", {
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
         return;
       }
       let favorited = await events.favoritedEventsSwitch(req.session.user, req.params.id);
       if(favorited.favoritedEventSwitched == true){
-        res.render('partials/favorite', {layout: null});    //ajax
+        res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
       }
       if (favorited.favoritedEventSwitched!=true){
         throw "Was not able to favorite event";

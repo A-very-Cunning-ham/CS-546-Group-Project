@@ -12,12 +12,12 @@ router
     .route('/:eventId')
     .post(async (req, res) => {    
         try{
-            if(req.session.user){
-
-            }
-            else{
-                res.redirect("/login");
-                //maybe send error message
+            if(!req.session.user){
+                res.render("/userLogin",{
+                    title: "Login",
+                    loggedIn: false,
+                    error: "Please log in first"
+                });
             }
         }catch(e){
             res.status(400);
@@ -52,7 +52,10 @@ router
             const { comment } = commentData;
             const newComment = await comments.createComment(req.params.eventId, req.session.user, xss(comment));
             const getEvent = await events.getEventById(req.params.id);
-            res.render('partials/comment', {layout:null, ...getEvent});     //ajax
+            res.render('partials/comment', {layout: null, Name: getEvent.eventName,location: getEvent.location, startTime: getEvent.startTime, endTime: getEvent.endTime,
+                postedBy: getEvent.postedBy, tags: getEvent.tags, description: getEvent.description, capacity: getEvent.capacity, numUserRegistered: getEvent.numUserRegistered,
+                usersRegistered: getEvent.usersRegistered, numFavorite: getEvent.numFavorite, favoriteUsers: getEvent.favoriteUsers, image: getEvent.image, college: getEvent.college,
+                comments: getEvent.comment, loggedIn: true, title: "Event Details"});     //ajax
             //res.render("eventDetails", {info: getEvent});
         }catch(e){
             res.status(400);
