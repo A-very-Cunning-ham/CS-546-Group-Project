@@ -231,7 +231,9 @@ router
             image);
           if(event.eventInserted == true){
               res.render("createdEvents", {eventName: createData.eventName, location: createData.location, startTime: createData.startTime, endTime: createData.endTime, postedBy: createData.postedBy, tags: createData.tags, 
-                description: createData.description, capacity: createData.capacity, college: createData.college});
+                description: createData.description, capacity: createData.capacity, college: createData.college,
+                title: "Created Events", loggedIn: true
+              });
           }
           else{
               res.status(500).render("createEvent", {
@@ -240,12 +242,18 @@ router
             }
       }catch(e){
         console.error(e);
-          res.status(400).render("createEvent", {error: e});
+          res.status(400).render("createEvent", {
+            title: "Created Events", loggedIn: true,
+            error: e
+          });
       }
 
 
     }catch(e){
-        res.status(400).render("createEvent", {error: e});
+        res.status(400).render("createEvent", {
+          title: "Created Events", loggedIn: true,
+          error: e
+        });
     }
 
   });
