@@ -1,8 +1,8 @@
 <h1>Register New Account</h1>
 <form method="POST" action="/register" id="registration-form">
-    <label for="usernameInput">Username:</label>
+    <label for="usernameInputRegister">Username:</label>
     <input type="text" id="usernameInputRegister" name="usernameInput">
-    <label for="passwordInput">Password:</label>
+    <label for="passwordInputRegister">Password:</label>
     <input type="password" id="passwordInputRegister" name="passwordInput">
     <label for="firstnameInput">First name:</label>
     <input type="text" id="firstnameInput" name="firstnameInput">
@@ -10,6 +10,6 @@
     <input type="text" id="lastnameInput" name="lastnameInput">
     <label for="collegeInput">College:</label>
     <input type="text" id="collegeInput" name="collegeInput">
-    <button type="submit" id="button">Submit</button>
+    <button type="submit" class="submitbutton">Submit</button>
 </form>
-<p>{{error}}</p>
+<p class="error">{{error}}</p>

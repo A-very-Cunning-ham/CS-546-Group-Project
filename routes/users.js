@@ -16,9 +16,9 @@ router
     try{
       if (req.session.user){
         const userData = await users.getUserData(req.session.user);
-        console.log(userData);
+        // console.log(userData);
         const upcomingEvents = await events.getUpcomingEvents(userData.college);
-        console.log(upcomingEvents);
+        // console.log(upcomingEvents);
         res.render("homepage", {
           loggedIn: true,
           username: req.session.user,
@@ -26,9 +26,11 @@ router
           event: upcomingEvents
         });
       } else{
+        const upcomingEvents = await events.getUpcomingEvents();
         res.render("homepage", {
           title: "Homepage",
-          loggedIn: false
+          loggedIn: false,
+          event: upcomingEvents
         });
       }
     }
@@ -230,8 +232,7 @@ router
             createData.capacity, 
             image);
           if(event.eventInserted == true){
-              res.render("createdEvents", {eventName: createData.eventName, location: createData.location, startTime: createData.startTime, endTime: createData.endTime, postedBy: createData.postedBy, tags: createData.tags, 
-                description: createData.description, capacity: createData.capacity, college: createData.college});
+            res.redirect("/created");
           }
           else{
               res.status(500).render("createEvent", {
@@ -240,12 +241,18 @@ router
             }
       }catch(e){
         console.error(e);
-          res.status(400).render("createEvent", {error: e});
+          res.status(400).render("createEvent", {
+            title: "Created Events", loggedIn: true,
+            error: e
+          });
       }
 
 
     }catch(e){
-        res.status(400).render("createEvent", {error: e});
+        res.status(400).render("createEvent", {
+          title: "Created Events", loggedIn: true,
+          error: e
+        });
     }
 
   });
@@ -260,7 +267,7 @@ router
         res.render("registeredEvents", {
           title: "Registered Events",
           loggedIn: true,
-          registered: registered 
+          event: registered 
         });
       }
       else{
@@ -301,9 +308,15 @@ router
       try{
         if(req.session.user){
           //function to get all the events a user has created, then pass in result to render page
+
+          // TODO: load this data
+          let createdEvents = await events.getEventsCreatedBy(req.session.user);
+          console.log(createdEvents);
+
           res.render("createdEvents", {
             title: "Created Events",
-            loggedIn: true
+            loggedIn: true,
+            event: createdEvents
           });
         }
         else{
@@ -373,7 +386,7 @@ router
         res.render("favorited", {
           title: "Favorited Events",
           loggedIn: true,
-          favorited: favorited
+          event: favorited
         });
 
       }catch(e){

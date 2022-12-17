@@ -32,7 +32,7 @@ const createEvent = async (
 
 	//check if user exists
 	helpers.errorIfNotProperUserName(postedBy, "postedBy");
-	postedBy = postedBy.trim();
+	postedBy = postedBy.toLowerCase().trim();
 	let user = await users.getUserData(postedBy);
 	if (!user) throw `No user present with userName: ${postedBy}`;
 
@@ -108,17 +108,23 @@ const getEventById = async (id) => {
 };
 
 const getUpcomingEvents = async (college) => {
-	helpers.errorIfNotProperString(college, "College");
-
-	college = college.trim();
 
 	const event_collection_c = await event_collection();
-	const events = await event_collection_c.find({
-		college: college,
-		startTime: { $gte: new Date() },
-	}).toArray();
+	if(college){
+		helpers.errorIfNotProperString(college, "College");
+		college = college.trim();
+	
+		var events = await event_collection_c.find({
+			college: college,
+			startTime: { $gte: new Date() },
+		}).toArray();
+	}else{
+		var events = await event_collection_c.find({
+			startTime: { $gte: new Date() },
+		}).toArray();
 
-	// console.log(events);
+	}
+
 
 	if (!events) throw "No events found";
 
@@ -160,9 +166,23 @@ const registerForEvent = async (username, eventID) => {
 	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
 	if (!event) throw `No Event present with id: ${eventID}`;
 
+		// TODO: test these conditions
+		let alreadyRegistered = await getRegistered(username);
+
+		for(let toCompareEvent of alreadyRegistered){
+			if((event.startTime <= toCompareEvent.endTime) && (event.endTime >= toCompareEvent.startTime)){
+				throw "Can't register for events with overlapping times";
+			}
+		}
+
+		if(event.numUserRegistered >= event.capacity){
+			throw "Event capacity already reached, can't register";
+		}
+
 	let res = await event_collection_c.updateOne(
 		{ _id: ObjectId(eventID) },
-		{ $push: { usersRegistered: username } }
+		{ $push: { usersRegistered: username } },
+		{ $inc: { numUserRegistered: 1} }
 	);
 
 	if (res.acknowledged == false) {
@@ -272,6 +292,36 @@ const getRegistered = async (username) => {
 
 };
 
+const getEventsCreatedBy = async (username) => {
+	try {
+		helpers.errorIfNotProperUserName(username, "username");
+	} catch (e) {
+		throw `Invalid username`;
+	}
+
+	try{
+		const event_collection_c = await event_collection();
+		console.log(username);
+		username = username.toLowerCase().trim();
+		const events = await event_collection_c.find({
+			postedBy: username
+		}).toArray();
+	
+		if (!events) throw "No events found";
+	
+		const res = events.map((obj) => {
+			obj.image.data = obj.image.data.toString('base64');
+			return obj;
+		  });
+		
+		return res;
+
+	}catch(e){
+		throw e;
+	}
+
+};
+
 module.exports = {
 	createEvent, 
 	getEventById, 
@@ -280,5 +330,6 @@ module.exports = {
 	favoritedEventsSwitch,
 	deleteEvent,
 	getFavorites,
-	getRegistered
+	getRegistered,
+	getEventsCreatedBy
 };

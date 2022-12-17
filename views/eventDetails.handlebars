@@ -1,0 +1,16 @@
+<h1>{{info.eventName}}</h1>
+
+
+<form method="POST" action="/events/register/{{info._id}}" id="register-btn">
+    <input type="submit" value="Register For This Event">
+</form>
+<form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
+    <input type="submit" value="Add Event To Favorites">
+</form>
+
+{{#each comments}}
+    <div class="comment">
+        <h2>{{userName}} commented on {{commentDate}}:</h2>
+        <p>{{body}}</p>
+    </div>
+{{/each}}
