@@ -33,15 +33,17 @@ if(myForm){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "An input variable is not given";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
         if (typeof(usernameElement.value) !== 'string' || typeof(passwordElement.value) !== 'string') {
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "All input variables must be a string";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
         let str = usernameElement.value.trim();
         let str2 = passwordElement.value.trim();
@@ -49,8 +51,9 @@ if(myForm){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "An input is an empty string";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
         //username check
         for(x of usernameElement.value){
@@ -66,24 +69,27 @@ if(myForm){
                 myForm.reset();
                 error.hidden = false;  
                 error.innerHTML = "Invalid username, cannot have special characters";
-                input.focus();
+                usernameElement.focus();
                 console.log("error");
+                return;
             }
         }
         if(usernameElement.value.length < 4){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "Username too short";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
         //password checks
         if(passwordElement.value.length < 6){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password too short";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
 
         let upper_chr_present = false;
@@ -101,8 +107,9 @@ if(myForm){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password must contain an uppercase letter";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }   
         //number
         let num_chr_present = false; 
@@ -120,16 +127,18 @@ if(myForm){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password must contain an uppercase letter";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
         //space
         if (passwordElement.value.indexOf(' ') >= 0) {
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password cannot contain empty spaces";
-            input.focus();
+            usernameElement.focus();
             console.log("error");
+            return;
         }
         //special charcter
         let special_chr_present = false;
@@ -150,8 +159,10 @@ if(myForm){
             myForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password must conatin a special character";
-            input.focus();
-            console.log("error");
+            usernameElement.focus();
+            console
+            .log("error");
+            return;
         }
     });
 }
@@ -162,29 +173,32 @@ if(myRegForm){
         error.hidden = true;
         //username, password, first, and last name checks
         if (usernameElementReg.value === undefined || passwordElementReg.value === undefined || firstNameReg.value === undefined || lastNameReg === undefined) {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "An input variable is not given";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
         if (typeof(usernameElementReg.value) !== 'string' || typeof(passwordElementReg.value) !== 'string' || typeof(firstNameReg.value) !== 'string' || typeof(lastNameReg.value) !== 'string') {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "All input variables must be a string";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
         let str = usernameElementReg.value.trim();
         let str2 = passwordElementReg.value.trim();
         let str3 = firstNameReg.value.trim();
         let str4 = lastNameReg.value.trim();
         if (str.length === 0 || str2.length === 0 || str3.length === 0 || str4.length === 0) {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "An input is an empty string";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
         //username checks
         for(x of usernameElementReg.value){
@@ -197,27 +211,30 @@ if(myRegForm){
                     false
                 )
             ) {
-                myForm.reset();
+                myRegForm.reset();
                 error.hidden = false;  
                 error.innerHTML = "Invalid username, cannot have special characters";
-                input.focus();
+                usernameElementReg.focus();
                 console.log("error");
+                return;
             }
         }
         if(usernameElementReg.value.length < 4){
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "Username too short";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
         //password checks
         if(passwordElementReg.value.length < 6){
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password too short";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
 
         let upper_chr_present = false;
@@ -232,11 +249,12 @@ if(myRegForm){
             }
         }   
         if (!upper_chr_present) {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password must contain an uppercase letter";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }   
         //number
         let num_chr_present = false; 
@@ -251,19 +269,21 @@ if(myRegForm){
             }
         }
         if (!num_chr_present) {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password must contain an uppercase letter";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
         //space
         if (passwordElementReg.value.indexOf(' ') >= 0) {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password cannot contain empty spaces";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
         //special charcter
         let special_chr_present = false;
@@ -281,11 +301,12 @@ if(myRegForm){
             }
         }
         if (!special_chr_present) {
-            myForm.reset();
+            myRegForm.reset();
             error.hidden = false;  
             error.innerHTML = "Password must conatin a special character";
-            input.focus();
+            usernameElementReg.focus();
             console.log("error");
+            return;
         }
 
         for (let x of firstNameReg.value.trim()) {
@@ -298,11 +319,12 @@ if(myRegForm){
                     false
                 )
             ) {
-                myForm.reset();
+                myRegForm.reset();
                 error.hidden = false;  
                 error.innerHTML = "First name is invalid";
-                input.focus();
+                usernameElementReg.focus();
                 console.log("error");
+                return;
             }
         }
 
@@ -316,11 +338,12 @@ if(myRegForm){
                     false
                 )
             ) {
-                myForm.reset();
+                myRegForm.reset();
                 error.hidden = false;  
                 error.innerHTML = "Last name is invalid";
-                input.focus();
+                usernameElementReg.focus();
                 console.log("error");
+                return;
             }
         }
 
@@ -334,70 +357,78 @@ if(myCreateForm){
         error.hidden = true;
         //name, loc, description, tags checks
         if (eventNameElement.value === undefined || location.value === undefined || desElement.value === undefined || tagsElement.value === undefined) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "An input variable is not given";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
         if (typeof(eventNameElement.value) !== 'string' || typeof(locationElement.value) !== 'string' || typeof(desElement.value) !== 'string' || typeof(tagsElement.value) !== 'string') {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "All input variables must be a string";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
         let str = eventNameElement.value.trim();
         let str2 = locationElement.value.trim();
         let str3 = desElement.value.trim();
         let str4 = tagsElement.trim();
         if (str.length === 0 || str2.length === 0 || str3.length === 0 || str4.length === 0) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "An input is an empty string";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
         //cap check
         if (isNaN(capacityElement.value)) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "Capacity must be a number";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
         capacity = parseFloat(capacityElement.value);
 
         if (capacity < 1 || capacity % 1 > 0) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "Invalid capacity";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
         //date check
         if (Date.parse(startElement.value) >= Date.parse(endElement.value)) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "Start time must be before end time";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
         //image check
         if (imageElement.value.size > 1024 * 1024 * 5) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "Image size must be smaller than 5";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
     
         if (!imageElement.value.mimetype.includes("image")) {
-            myForm.reset();
+            myCreateForm.reset();
             error.hidden = false;  
             error.innerHTML = "File must be an image";
-            input.focus();
+            eventNameElement.focus();
             console.log("error");
+            return;
         }
     });
 }
