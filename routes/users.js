@@ -345,10 +345,12 @@ router
         //maybe send an error message somehow
       }
       try{
-        //let favorited = await users.getFavorited
+        let favorited = await events.getFavorites(req.session.user);
         res.render("favorited", {favorited: favorited});
       }catch(e){
         res.status(400);
+        // console.log(e);
+        // FIXME: when this catch is reached the user just has to wait for the request to timeout. 400 not served or doesn't do what we want it to
       }
     });
 
