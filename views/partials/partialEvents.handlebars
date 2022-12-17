@@ -1,0 +1,18 @@
+<div class="event">
+    {{#each event}}
+        <a href="/events/{{_id}}" class="link"><h2>{{eventName}}</h2></a>
+        <img src="data:{{image.mimetype}};base64,{{image.data}}" alt="event image" class="imgId">
+        <p class="labelp">Location:</p> {{location}} <br>
+        <p class="labelp">from</p> {{startTime}} <p class="labelp">to</p> {{endTime}} <br>
+        <p class="labelp">Posted by</p> {{postedBy}} <br>
+        <p class="labelp">Capacity:</p> {{numUserRegistered}}/{{capacity}} <br>
+        <p class="labelp">Description:</p> {{description}} <br>
+        <p class="labelp">Tags:</p>
+        {{#each tags}}
+            <p class="tag">#{{this}} </p>
+        {{/each}}
+        <!--link to comments page-->
+        <br>
+        <p class="labelp">{{numComments}} comment(s)</p>
+    {{/each}}
+</div>
