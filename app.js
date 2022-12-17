@@ -1,6 +1,7 @@
 // Setup server, session and middleware here.
 const express = require("express");
 const app = express();
+const static = express.static(__dirname + '/public');
 const session = require("express-session");
 const configRoutes = require("./routes");
 const fileUpload = require('express-fileupload');
@@ -9,6 +10,7 @@ const exphbs = require("express-handlebars");
 
 const cookieParser = require("cookie-parser");
 
+app.use('/public', static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
