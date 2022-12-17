@@ -256,9 +256,11 @@ router
     try{
       if(req.session.user){
         //function from events.js to get all events that a user is registered for, then pass in result to render page
+        let registered = await events.getRegistered(req.session.user);
         res.render("registeredEvents", {
           title: "Registered Events",
-          loggedIn: true
+          loggedIn: true,
+          registered: registered 
         });
       }
       else{

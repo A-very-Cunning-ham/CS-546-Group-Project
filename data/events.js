@@ -212,7 +212,6 @@ const getFavorites = async (username) => {
 		throw `Invalid username`;
 	}
 
-
 	try{
 		let user = await users.getUserData(username);
 	
@@ -239,6 +238,40 @@ const getFavorites = async (username) => {
 
 };
 
+const getRegistered = async (username) => {
+	try {
+		helpers.errorIfNotProperUserName(username, "username");
+	} catch (e) {
+		throw `Invalid username`;
+	}
+
+	try{
+		let user = await users.getUserData(username);
+		
+		// TODO: check if this needs to check the length
+		if(!user.eventsRegistered){
+			throw "User has no favorite events";
+		}
+	
+		const res = await Promise.all(user.eventsRegistered.map(async (obj) => {
+			obj = obj.toString();
+
+			let event = await getEventById(obj);
+			event.image.data = event.image.data.toString('base64');
+
+			return event;
+		  }));
+
+		  if (!res) throw "No events found";
+
+		return res;
+
+	}catch(e){
+		throw e;
+	}
+
+};
+
 module.exports = {
 	createEvent, 
 	getEventById, 
@@ -246,5 +279,6 @@ module.exports = {
 	registerForEvent,
 	favoritedEventsSwitch,
 	deleteEvent,
-	getFavorites
+	getFavorites,
+	getRegistered
 };
