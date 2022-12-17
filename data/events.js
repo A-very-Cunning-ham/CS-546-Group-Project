@@ -160,9 +160,23 @@ const registerForEvent = async (username, eventID) => {
 	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
 	if (!event) throw `No Event present with id: ${eventID}`;
 
+		// TODO: test these conditions
+		let alreadyRegistered = await getRegistered(username);
+
+		for(let toCompareEvent of alreadyRegistered){
+			if((event.startTime <= toCompareEvent.endTime) && (event.endTime >= toCompareEvent.startTime)){
+				throw "Can't register for events with overlapping times";
+			}
+		}
+
+		if(event.numUserRegistered >= event.capacity){
+			throw "Event capacity already reached, can't register";
+		}
+
 	let res = await event_collection_c.updateOne(
 		{ _id: ObjectId(eventID) },
-		{ $push: { usersRegistered: username } }
+		{ $push: { usersRegistered: username } },
+		{ $inc: { numUserRegistered: 1} }
 	);
 
 	if (res.acknowledged == false) {
