@@ -66,3 +66,6 @@ p {
     color:#222222;
     margin:5px;
 }
+.error {
+    color:crimson;
+}
