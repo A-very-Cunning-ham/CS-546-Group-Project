@@ -1,7 +1,7 @@
 <h1>Your Events</h1>
 <ul class="event">
     {{#each created}}
-        <h2>{{eventName}}</h2>
+        <a href="/{{_id}}"><h2>{{eventName}}</h2></a>
         <img src="data:{{image.mimetype}};base64,{{image.data}}" alt="event image" class="imgId">
         <p>Location: {{location}}</p>
         <p>from {{startTime}} to {{endTime}}</p>
@@ -13,6 +13,6 @@
             <p class="tag">#{{this}} </p>
         {{/each}}
         <!--link to comments page-->
-        <a href="/{{id}}">{{numComments}} comment(s)</a>
+        <p>{{numComments}} comment(s)</p>
     {{/each}}
 </ul>

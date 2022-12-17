@@ -1,4 +1,5 @@
 const mongoCollections = require('../config/mongoCollections');
+const users = require('./users');
 const user_collection = mongoCollections.user_collection;
 const event_collection = mongoCollections.event_collection;
 const { ObjectId } = require('mongodb');
@@ -6,7 +7,7 @@ const { ObjectId } = require('mongodb');
 const helpers = require('../helpers');
 const eventData = require('./events');
 
-const createComment = async (eventID, userID, comment) => {
+const createComment = async (eventID, userName, comment) => {
 	const user_collection_c = await user_collection();
 	const event_collection_c = await event_collection();
 
@@ -19,10 +20,11 @@ const createComment = async (eventID, userID, comment) => {
 	if (!event) throw `No Event present with id: ${eventID}`;
 
 	//check if user exists
-	helpers.errorIfNotProperID(userID, 'userID');
-	userID = userID.trim();
-	let user = await user_collection_c.findOne({ _id: ObjectId(userID) });
-	if (!user) throw `No user present with id: ${userID}`;
+	helpers.errorIfNotProperUserName(userName, 'userName');
+	// userID = userID.trim();
+	// let user = await user_collection_c.findOne({ _id: ObjectId(userID) });
+	// if (!user) throw `No user present with id: ${userID}`;
+	users.checkUser(userName);
 
 	//from stack overflow
 
@@ -34,7 +36,7 @@ const createComment = async (eventID, userID, comment) => {
 	let newReview = {
 		_id: commentID,
 		commentDate: new Date(),
-		userID: userID,
+		userName: userName,
 		body: comment,
 	};
 
