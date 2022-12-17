@@ -7,3 +7,10 @@
 <form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
     <input type="submit" value="Add Event To Favorites">
 </form>
+
+{{#each comments}}
+    <div class="comment">
+        <h2>{{userName}} commented on {{commentDate}}:</h2>
+        <p>{{body}}</p>
+    </div>
+{{/each}}
