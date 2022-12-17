@@ -92,7 +92,7 @@ router//NOT DONE
       }
       let favorited = await events.favoritedEventsSwitch(req.session.user, req.params.id);
       if(favorited.favoritedEventSwitched == true){
-        res.render('partials/favorite', {layout: null});    //ajax
+        res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
       }
       if (favorited.favoritedEventSwitched!=true){
         throw "Was not able to favorite event";
