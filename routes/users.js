@@ -52,8 +52,7 @@ router
       } else{
         res.render("userLogin", {
           title: "Login",
-          loggedIn: false,
-          error: "Please log in first"
+          loggedIn: false
         });
       }
     }
