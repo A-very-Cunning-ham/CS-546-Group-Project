@@ -66,7 +66,7 @@ router
       helpers.errorIfNotProperPassword(passwordInput);
       let output = await users.checkUser(usernameInput, passwordInput);
       if (output.authenticatedUser==true){
-        req.session.user = usernameInput;
+        req.session.user = output.username;
         res.redirect("/");
       }
     } catch (e){
