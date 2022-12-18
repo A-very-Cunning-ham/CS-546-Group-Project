@@ -5,6 +5,49 @@ const data = require("../data");
 const e = require("express");
 const users = data.users;
 const events = data.events;
+const helpers = require("../helpers");
+
+
+  router
+  .route('/search')
+  .post(async (req, res) => {
+    try{
+      helpers.errorIfNotProperString(req.body.search);
+
+      if(req.body.search.length < 3){
+        throw "Search term must be at least 2 characters"
+      }
+      req.body.search = req.body.search.trim();
+
+    }catch(e){
+      // FIXME: errors are not shown to user and they cause request to hang
+      console.log(e);
+      res.status(400);
+    }
+
+
+    try{
+    if (req.session.user){
+      const userData = await users.getUserData(req.session.user);
+      // console.log(userData);
+      const upcomingEvents = await events.searchUpcomingEvents(userData.college, req.body.search);
+      // console.log(upcomingEvents);
+      res.render("homepage", {
+        loggedIn: true,
+        username: req.session.user,
+        college: userData.college,
+        event: upcomingEvents,
+        searchTerm: req.body.search
+      });
+    } else{
+      res.redirect("/");
+    }
+  }
+  catch (e){
+    console.log(e);
+    res.status(400);
+  }
+});
 
 router
   .route('/:id')//not working
@@ -64,6 +107,7 @@ router
       res.status(400);
   }
   try{
+    // FIXME: what's this route doing? seems to deregister but we probably want that in its own route, not /:id
       let deReg = await users.deregEvent(req.session.user, req.params.id);    
       let eventInfo = await events.getEventById(req.params.id);
       res.render("eventDetails", {

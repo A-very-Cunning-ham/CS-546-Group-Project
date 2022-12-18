@@ -18,9 +18,14 @@
                 <li><a href="/registered">Your Registered Events</a></li>
                 <li><a href="/favorited">Your Favorited Events</a></li>
                 <li><a href="/logout">Log Out</a></li>
+                <form method="POST" id="form" action="/events/search">
+                    <input type="text" placeholder="search" id="search" name="search">
+                    <button type="submit" id="btn">Search</button>
+                </form>
             </ul>
         </header>
     {{else}}
+    <div class="error" id="error" hidden>Im an error</div>
         <header class="guest">
             <ul class="headnav">
                 <li><a href="/register">Register</a></li>
@@ -32,5 +37,6 @@
     <main>
         {{{body}}}
     </main>
+    <script src="public/js/main.js"></script>
 </body>
 </html>
