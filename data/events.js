@@ -431,5 +431,6 @@ module.exports = {
 	getRegistered,
 	getEventsCreatedBy,
 	searchUpcomingEvents,
-	cancelEvent
+	cancelEvent,
+	uncancelEvent
 };
