@@ -3,30 +3,32 @@
 <p id="desc">{{info.description}}</p>
 <p>from {{info.startTime}} to {{info.endTime}}</p>
 <p>Hosted at {{info.location}}</p>
-<p>Capacity: {{info.usersRegistered}}/{{info.capacity}}</p>
+<p>Capacity: {{info.usersRegistered.length}}/{{info.capacity}}</p>
 {{#if owner}} <p>Currently registered: {{info.usersRegistered}}</p> {{/if}}
 {{#each info.tags}}<p class="tag">#{{this}} </p>{{/each}}
 
 {{#if owner}}
 <h2 class="header2">Edit Event:</h2>
 
+<div class="error" id="error0" hidden>Im an error</div>
+
 <form method="POST" action="/created/{{info._id}}" id="editevent-form" encType="multipart/form-data">
     <label for="eventName">Event name:</label>
-    <input type="text" id="eventName" name="eventName"><br>
+    <input type="text" id="editeventName" name="eventName"><br>
     <label for="location">Location:</label>
-    <input type="text" id="location" name="location"><br>
+    <input type="text" id="editlocation" name="location"><br>
     <label for="startTime">Start time:</label>
-    <input type="datetime-local" id="startTime" name="startTime"><br>
+    <input type="datetime-local" id="editstartTime" name="startTime"><br>
     <label for="endTime">End time:</label>
-    <input type="datetime-local" id="endTime" name="endTime"><br>
+    <input type="datetime-local" id="editendTime" name="endTime"><br>
     <label for="description">Description:</label>
-    <input type="text" id="description" name="description"><br>
+    <input type="text" id="editdescription" name="description"><br>
     <label for="capacity">Capacity:</label>
-    <input type="number" min="1" id="capacity" name="capacity"><br>
+    <input type="number" min="1" id="editcapacity" name="capacity"><br>
     <label for="tags">Tags:</label>
-    <input type="text" id="tags" name="tags"><br>
+    <input type="text" id="edittags" name="tags"><br>
     <label for="image">Upload image here:</label>
-    <input type="file" id="image" name="image"><br>
+    <input type="file" id="editimage" name="image"><br>
     <button type="submit" class="submitbutton">Submit</button>
 </form>
 {{/if}}
