@@ -25,16 +25,9 @@ const createComment = async (eventID, userName, comment) => {
 	// userID = userID.trim();
 	let user = await user_collection_c.findOne({ username: userName });
 	if (!user) throw `No user present with username: ${userName}`;
-	//let testing = await users.checkUser(userName);
-
-	//from stack overflow
-
-	// let tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-	// let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
-	// let commentDate = localISOTime;
 
 	let commentID = new ObjectId();
-	let newReview = {
+	let newComment = {
 		_id: commentID,
 		commentDate: new Date(),
 		userName: userName,
@@ -43,9 +36,14 @@ const createComment = async (eventID, userName, comment) => {
 
 	let res = await event_collection_c.updateOne(
 		{ _id: ObjectId(eventID) },
-		{ $push: { comment: newReview } }
+		{ $push: { comments: newComment } }
 	);
-	return newReview;
+
+	if (res.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return newComment;
+	}
 };
 
 const getAllCommentForEvent = async (eventID) => {
