@@ -18,34 +18,27 @@ const helpers = require("../helpers");
         throw "Search term must be at least 2 characters"
       }
       req.body.search = req.body.search.trim();
-
-    }catch(e){
-      // FIXME: errors are not shown to user and they cause request to hang
-      console.log(e);
-      res.status(400);
-    }
-
-
-    try{
-    if (req.session.user){
-      const userData = await users.getUserData(req.session.user);
-      // console.log(userData);
-      const upcomingEvents = await events.searchUpcomingEvents(userData.college, req.body.search);
-      // console.log(upcomingEvents);
-      res.render("homepage", {
-        loggedIn: true,
-        username: req.session.user,
-        college: userData.college,
-        event: upcomingEvents,
-        searchTerm: req.body.search
-      });
+      if (req.session.user){
+        const userData = await users.getUserData(req.session.user);
+        // console.log(userData);
+        const upcomingEvents = await events.searchUpcomingEvents(userData.college, req.body.search);
+        // console.log(upcomingEvents);
+        res.render("homepage", {
+          loggedIn: true,
+          username: req.session.user,
+          college: userData.college,
+          event: upcomingEvents,
+          searchTerm: req.body.search
+        });
     } else{
       res.redirect("/");
     }
   }
   catch (e){
-    console.log(e);
-    res.status(400);
+    res.status(400).render("errorPage",{
+      title: "Error",
+      error: e
+    });
   }
 });
 
@@ -63,11 +56,7 @@ router
         })
         return;
       }
-    }catch(e){
-        res.status(400);
-    }
-    try{
-        let eventInfo = await events.getEventById(req.params.id);
+      let eventInfo = await events.getEventById(req.params.id);
         if(req.session.user == eventInfo.postedBy){
           res.render("eventDetails", {
             title: "Event Details",
@@ -84,29 +73,24 @@ router
             info: eventInfo
           });
         }
-      }catch(e){
-        res.status(400);
-      }
-    })
-  .post(async (req, res) => {    
-    try{
-      if(!req.session.user){
-        res.render("userLogin",{
-          title: "Login",
-          loggedIn: false,
-          error: "Please log in first"
-        });
-      }
     }catch(e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
-    try{
-      if(!req.params.id) throw "Event ID not given";
-      //more error checking
-  }catch(e){
-      res.status(400);
-  }
+    })
+  .post(async (req, res) => {
   try{
+    if(!req.session.user){
+      res.render("userLogin",{
+        title: "Login",
+        loggedIn: false,
+        error: "Please log in first"
+      });
+      return;
+    }
+    if(!req.params.id) throw "Event ID not given";
     // FIXME: what's this route doing? seems to deregister but we probably want that in its own route, not /:id
       let deReg = await users.deregEvent(req.session.user, req.params.id);    
       let eventInfo = await events.getEventById(req.params.id);
@@ -116,7 +100,10 @@ router
         info: eventInfo
       });
     }catch(e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   });
     
@@ -125,12 +112,7 @@ router
   .route('/register/:id')
   .post(async (req, res) => {
     try{
-        if(!req.params.id) throw "Event ID not given";
-        //more error checking
-    }catch(e){
-        res.status(400);
-    }
-    try{
+      if(!req.params.id) throw "Event ID not given";
       if (!req.session.user){
         res.render("userLogin", {
           title: "Login",
@@ -149,7 +131,10 @@ router
         throw "Was not able to register for event";
       }
     }catch(e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   });
 
@@ -158,11 +143,6 @@ router
   .post(async (req, res) => {
     try{
       if(!req.params.id) throw "Event ID not given";
-      //more error checking
-    }catch(e){
-      res.status(400);
-    }
-    try{
       if (!req.session.user){
         res.render("userLogin", {
           title: "Login",
@@ -179,7 +159,10 @@ router
         throw "Was not able to favorite event";
       }
     }catch(e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   });
 

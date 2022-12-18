@@ -35,7 +35,10 @@ router
       }
     }
     catch (e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   })
 
@@ -55,7 +58,10 @@ router
       }
     }
     catch (e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   })
   .post(async (req, res) => {
@@ -94,7 +100,10 @@ router
       }
     }
     catch (e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   })
   .post(async (req, res) => {
@@ -154,7 +163,10 @@ router
         loggedIn: false
       });
     } catch(e){
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   });
 
@@ -174,7 +186,10 @@ router
           });
         }
     }catch(e){
-        res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   })
   .post(async (req, res) => {
@@ -274,32 +289,26 @@ router
         res.redirect("/login");
       }
     }catch(e){
-      console.log(e);
-      res.status(400);
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
     }
   })
   .post(async (req,res) => {
     try{
-      if(req.session.user){
-      }
-      else{
+      if(!req.session.user){
         res.redirect("login");
       }
-    }catch(e){
-        res.status(400);
-      }
-    try{
       if(!req.params.id) throw "Event ID not given";
-      //rest of error checking
-    }catch(e){
-      res.status(400);
-    }
-    try{
       let del = await events.deleteEvent(req.params.id);
       res.redirect("/created");
     }catch(e){
-      res.status(400);
-    }
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
+      }
   });
 
 
@@ -312,7 +321,6 @@ router
 
           // TODO: load this data
           let createdEvents = await events.getEventsCreatedBy(req.session.user);
-          console.log(createdEvents);
 
           res.render("createdEvents", {
             title: "Created Events",
@@ -324,23 +332,21 @@ router
           res.redirect("/login");
         }
       }catch(e){
-        res.status(400);
+        res.status(400).render("errorPage",{
+          title: "Error",
+          error: e
+        });
       }
     });
 
   router
     .route('/created/:id')
     .get(async (req, res) => {
-      if(!req.session.user){
-        res.redirect("/login");
-      }
       try{
+        if(!req.session.user){
+          res.redirect("/login");
+        }
         if(!req.params.id) throw "Event ID not given";
-        //rest of error checking
-      }catch(e){
-        res.status(400);
-      }
-      try{
         let info = await events.getEventById(req.params.id);   
         res.render("eventId", {
           title: "Event Details",
@@ -348,52 +354,46 @@ router
           info: info
         });
       }catch(e){
-        res.status(400);
+        res.status(400).render("errorPage",{
+          title: "Error",
+          error: e
+        });
       }
     })
     .post(async (req,res) => {    
       try{
-        if(req.session.user){
-
-        }
-        else{
+        if(!req.session.user){
           res.redirect("login");
         }
-      }catch(e){
-          res.status(400);
-        }
-      try{
         if(!req.params.id) throw "Event ID not given";
-        //rest of error checking
-      }catch(e){
-        res.status(400);
-      }
-      try{
         let del = await events.deleteEvent(req.params.id);
         res.redirect("/created");
       }catch(e){
-        res.status(400);
+        res.status(400).render("errorPage",{
+          title: "Error",
+          error: e
+        });
       }
     });
 
   router
     .route('/favorited')
     .get(async (req, res) => {
-      if(!req.session.user){
-        res.redirect("/login");
-      }
       try{
+        if(!req.session.user){
+          res.redirect("/login");
+        }
         let favorited = await events.getFavorites(req.session.user);
         res.render("favorited", {
           title: "Favorited Events",
           loggedIn: true,
           event: favorited
         });
-
       }catch(e){
-        res.status(400);
-        // console.log(e);
-        // FIXME: when this catch is reached the user just has to wait for the request to timeout. 400 not served or doesn't do what we want it to
+        res.status(400).render("errorPage",{
+          title: "Error",
+          error: e
+        });
       }
     });
 

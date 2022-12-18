@@ -11,7 +11,7 @@ const helpers = require("../helpers");
 
 router
     .route('/:eventId')
-    .post(async (req, res) => {    
+    .post(async (req, res) => {
         try{
             if(!req.session.user){
                 res.render("userLogin",{
@@ -19,11 +19,8 @@ router
                     loggedIn: false,
                     error: "Please log in first"
                 });
+                return;
             }
-        }catch(e){
-            res.status(400);
-        }
-        try{
             //TODO check validation - I have no idea if this covers all necessary cases
             const {comment} = req.body;
             if(!req.params.eventId) throw "EventId not provided";
@@ -41,8 +38,10 @@ router
             currTime = new Date();
             res.render('partials/comment', {layout: null, loggedIn: true, title: "Event Details", commenter: req.session.user, comment: comment, time: currTime});
         }catch(e){
-            console.log(e);
-            res.status(400);
+            res.status(400).render("errorPage",{
+                title: "Error",
+                error: e
+              });
         }
     });
 
