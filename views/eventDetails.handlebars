@@ -1,34 +1,45 @@
 <h1>{{info.eventName}}</h1>
+<h2>Posted by {{info.postedBy}} from {{info.college}}</h2>
+<p>{{info.description}}</p>
+<p>from {{info.startTime}} to {{info.endTime}}</p>
 
 {{#if owner}}
-<h2>You are the owner of this event!</h2>
-<h3>Event Details</h3>
-<ul>
-    <li>College: {{info.college}}</li>
-    <li>Location: {{info.location}}</li>
-    <li>Start Time: {{info.startTime}}</li>
-    <li>End Time: {{info.endTime}}</li>
-    <li>Posted By: {{info.postedBy}}</li>
-    <li>Tags: {{info.tags}}</li>
-    <li>Description: {{info.description}}</li>
-    <li>Capacity: {{info.capacity}}</li>
-    <li>Numbers of Users Registered: {{info.numUserRegistered}}</li>
-    <li>UsersRegistered: {{info.usersRegistered}}</li>
-</ul>
-{{else}}
-<h3>Event Details</h3>
-<ul>
-    <li>College: {{info.college}}</li>
-    <li>Location: {{info.location}}</li>
-    <li>Start Time: {{info.startTime}}</li>
-    <li>End Time: {{info.endTime}}</li>
-    <li>Posted By: {{info.postedBy}}</li>
-    <li>Tags: {{info.tags}}</li>
-    <li>Description: {{info.description}}</li>
-    <li>Capacity: {{info.capacity}}</li>
-    <li>Numbers of Users Registered: {{info.numUserRegistered}}</li>
-</ul>
+    <h2>Edit Event:</h2>
+
+<form method="PATCH" action="/created/{{info._id}}" id="editevent-form" encType="multipart/form-data">
+    <label for="eventName">Event name:</label>
+    <input type="text" id="eventName" name="eventName"><br>
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location"><br>
+    <label for="startTime">Start time:</label>
+    <input type="datetime-local" id="startTime" name="startTime"><br>
+    <label for="endTime">End time:</label>
+    <input type="datetime-local" id="endTime" name="endTime"><br>
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description"><br>
+    <label for="capacity">Capacity:</label>
+    <input type="number" min="1" id="capacity" name="capacity"><br>
+    <label for="tags">Tags:</label>
+    <input type="text" id="tags" name="tags"><br>
+    <label for="image">Upload image here:</label>
+    <input type="file" id="image" name="image"><br>
+    <button type="submit" class="submitbutton">submit</button>
+</form>
 {{/if}}
+
+<h3>Event Details</h3>
+<ul>
+    <li>College: {{info.college}}</li>
+    <li>Location: {{info.location}}</li>
+    <li>Start Time: {{info.startTime}}</li>
+    <li>End Time: {{info.endTime}}</li>
+    <li>Posted By: {{info.postedBy}}</li>
+    <li>Tags: {{info.tags}}</li>
+    <li>Description: {{info.description}}</li>
+    <li>Capacity: {{info.capacity}}</li>
+    <li>Numbers of Users Registered: {{info.numUserRegistered}}</li>
+    {{#if owner}} <li>UsersRegistered: {{info.usersRegistered}}</li> {{/if}}
+</ul>
 
 <form method="POST" action="/events/register/{{info._id}}" id="register-btn">
     <input type="submit" value="Register For This Event">
@@ -36,7 +47,6 @@
 <form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
     <input type="submit" value="Add Event To Favorites">
 </form>
-
 
 <form method="POST" action="/comments/{{info._id}}" id="makecomment-form">
     <label for="comment">Comment:</label>
