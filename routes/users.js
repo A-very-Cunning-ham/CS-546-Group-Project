@@ -5,6 +5,7 @@ const data = require("../data");
 const users = data.users;
 const events = data.events;
 const helpers = require("../helpers");
+const xss = require('xss');
 
 const maxImageSizeMB = 16;
 
@@ -67,9 +68,9 @@ router
     //when user tries to log in, if successful we send them to homepage. If username or password incorrect, we render the login page again with an error
     try{
       const {usernameInput, passwordInput} = req.body;
-      helpers.errorIfNotProperUserName(usernameInput);
-      helpers.errorIfNotProperPassword(passwordInput);
-      let output = await users.checkUser(usernameInput, passwordInput);
+      helpers.errorIfNotProperUserName(xss(usernameInput));
+      helpers.errorIfNotProperPassword(xss(passwordInput));
+      let output = await users.checkUser(xss(usernameInput), xss(passwordInput));
       if (output.authenticatedUser==true){
         req.session.user = output.username;
         res.redirect("/");
@@ -116,14 +117,14 @@ router
 				lastnameInput,
 				collegeInput,
 			} = req.body;
-			helpers.errorIfNotProperUserName(usernameInput, "username");
-			helpers.errorIfNotProperPassword(passwordInput, "password");
+			helpers.errorIfNotProperUserName(xss(usernameInput), "username");
+			helpers.errorIfNotProperPassword(xss(passwordInput), "password");
 			let output = await users.createUser(
-				usernameInput,
-				passwordInput,
-				firstnameInput,
-				lastnameInput,
-				collegeInput
+				xss(usernameInput),
+				xss(passwordInput),
+				xss(firstnameInput),
+				xss(lastnameInput),
+				xss(collegeInput)
 			);
       if (output.userInserted == true){
         res.redirect("/login");
@@ -202,10 +203,10 @@ router
         }
         if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.tags 
             || !createData.description || !createData.capacity) throw "An input is missing!";
-            helpers.errorIfNotProperString(createData.eventName, "eventName");
-            helpers.errorIfNotProperString(createData.location, "location");
-            helpers.errorIfNotProperDateTime(createData.startTime);
-            helpers.errorIfNotProperDateTime(createData.endTime);
+            helpers.errorIfNotProperString(xss(createData.eventName), "eventName");
+            helpers.errorIfNotProperString(xss(createData.location), "location");
+            helpers.errorIfNotProperDateTime(xss(createData.startTime));
+            helpers.errorIfNotProperDateTime(xss(createData.endTime));
             if (Date.parse(createData.startTime) >= Date.parse(createData.endTime)) {
               throw `StartTime can't after endTime`;
             }
@@ -217,9 +218,9 @@ router
               createData.tags[i] = createData.tags[i].trim();
             }
 
-            helpers.errorIfNotProperString(createData.description, "description");
+            helpers.errorIfNotProperString(xss(createData.description), "description");
           
-            helpers.errorIfStringIsNotNumber(createData.capacity);
+            helpers.errorIfStringIsNotNumber(xss(createData.capacity));
             capacity = parseFloat(createData.capacity);
           
             if (capacity < 1 || capacity % 1 > 0) {
@@ -237,14 +238,14 @@ router
 
         try{
           let event = await events.createEvent(
-            createData.eventName, 
-            createData.location, 
-            createData.startTime, 
-            createData.endTime, 
-            req.session.user, 
-            createData.tags, 
-            createData.description, 
-            createData.capacity, 
+            xss(createData.eventName), 
+            xss(createData.location), 
+            xss(createData.startTime), 
+            xss(createData.endTime), 
+            xss(req.session.user), 
+            xss(createData.tags), 
+            xss(createData.description), 
+            xss(createData.capacity), 
             image);
           if(event.eventInserted == true){
             res.redirect("/created");
@@ -345,6 +346,7 @@ router
 
   router
     .route('/created/:id')
+    //UNUSED GET ROUTE!!!!!!
     .get(async (req, res) => {
       try{
         if(!req.session.user){
@@ -364,22 +366,22 @@ router
           error: e
         });
       }
-    })
-    .post(async (req,res) => {    
-      try{
-        if(!req.session.user){
-          res.redirect("login");
-        }
-        if(!req.params.id) throw "Event ID not given";
-        let del = await events.deleteEvent(req.params.id);
-        res.redirect("/created");
-      }catch(e){
-        res.status(400).render("errorPage",{
-          title: "Error",
-          error: e
-        });
-      }
     });
+    // .post(async (req,res) => {    
+    //   try{
+    //     if(!req.session.user){
+    //       res.redirect("login");
+    //     }
+    //     if(!req.params.id) throw "Event ID not given";
+    //     let del = await events.deleteEvent(req.params.id);
+    //     res.redirect("/created");
+    //   }catch(e){
+    //     res.status(400).render("errorPage",{
+    //       title: "Error",
+    //       error: e
+    //     });
+    //   }
+    // });
 
   router
     .route('/favorited')

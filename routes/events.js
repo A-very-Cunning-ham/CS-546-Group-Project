@@ -243,4 +243,74 @@ router
     }
   });
 
+  router
+  .route('/cancel/:id')
+  .post(async (req, res) => {
+    try{
+      if(!req.params.id) throw "Event ID not given";
+      if (!req.session.user){
+        res.render("userLogin", {
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
+        return;
+      }
+      let cancel = await events.cancelEvent(req.session.user, req.params.id);
+      if(cancel.success == true){
+        //res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
+        let allCreated = await events.getEventsCreatedBy(req.session.user);
+        res.render("createdEvents", {
+          title: "Created Events",
+          loggedIn: true,
+          username: req.session.user,
+          event: allCreated
+        });
+      }
+      else{
+        throw "Was not able to cancel event";
+      }
+    }catch(e){
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
+    }
+  });
+
+  router
+  .route('/uncancel/:id')
+  .post(async (req, res) => {
+    try{
+      if(!req.params.id) throw "Event ID not given";
+      if (!req.session.user){
+        res.render("userLogin", {
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
+        return;
+      }
+      let uncancel = await events.uncancelEvent(req.session.user, req.params.id);
+      if(uncancel.success == true){
+        //res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
+        let allCreated = await events.getEventsCreatedBy(req.session.user);
+        res.render("createdEvents", {
+          title: "Created Events",
+          loggedIn: true,
+          username: req.session.user,
+          event: allCreated
+        });
+      }
+      else{
+        throw "Was not able to uncancel event";
+      }
+    }catch(e){
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
+    }
+  });
+
 module.exports = router;
