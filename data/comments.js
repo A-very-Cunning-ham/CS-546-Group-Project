@@ -8,6 +8,7 @@ const helpers = require('../helpers');
 const eventData = require('./events');
 
 const createComment = async (eventID, userName, comment) => {
+	//TODO check to see if we need the time for the comment?
 	const user_collection_c = await user_collection();
 	const event_collection_c = await event_collection();
 
@@ -22,18 +23,11 @@ const createComment = async (eventID, userName, comment) => {
 	//check if user exists
 	helpers.errorIfNotProperUserName(userName, 'userName');
 	// userID = userID.trim();
-	// let user = await user_collection_c.findOne({ _id: ObjectId(userID) });
-	// if (!user) throw `No user present with id: ${userID}`;
-	users.checkUser(userName);
-
-	//from stack overflow
-
-	// let tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-	// let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
-	// let commentDate = localISOTime;
+	let user = await user_collection_c.findOne({ username: userName });
+	if (!user) throw `No user present with username: ${userName}`;
 
 	let commentID = new ObjectId();
-	let newReview = {
+	let newComment = {
 		_id: commentID,
 		commentDate: new Date(),
 		userName: userName,
@@ -42,8 +36,14 @@ const createComment = async (eventID, userName, comment) => {
 
 	let res = await event_collection_c.updateOne(
 		{ _id: ObjectId(eventID) },
-		{ $push: { comment: newReview } }
+		{ $push: { comments: newComment } }
 	);
+
+	if (res.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return newComment;
+	}
 };
 
 const getAllCommentForEvent = async (eventID) => {

@@ -24,6 +24,7 @@
             </ul>
         </header>
     {{else}}
+    <div class="error" id="error" hidden>Im an error</div>
         <header class="guest">
             <ul class="headnav">
                 <li><a href="/register">Register</a></li>
@@ -35,5 +36,7 @@
     <main>
         {{{body}}}
     </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/public/js/main.js"></script>
 </body>
 </html>
