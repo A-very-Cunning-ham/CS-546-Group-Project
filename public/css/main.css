@@ -6,7 +6,7 @@ body {
     margin: 0;
     background-color: #555555;
     padding: 20px;
-    font-size:16pt;
+    font-size:14pt;
     
 }
 
@@ -78,13 +78,21 @@ button {
     font-size: 12pt;
     color:#222222;
 }
-
-#btn {
-    font-size:10pt;
-    color:#222222;
-
+#searchform {
+    display:inline;
+    margin: 30px;
+}
+#searchinput {
+    border:2px #555555;
+    padding:4px;
+    font-size:14pt;
+    font-family:'Times New Roman', Times, serif;
 }
 .comment {
+    font-size:14pt;
+    color:#222222;
+}
+#welcome {
     font-size:14pt;
     color:#222222;
 }
