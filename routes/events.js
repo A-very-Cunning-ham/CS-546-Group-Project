@@ -13,7 +13,7 @@ router
       if(!req.params.id) throw "Event ID not given";
         //more error checking
       if (!req.session.user){
-        res.render("/userLogin",{
+        res.render("userLogin",{
           title: "Login",
           loggedIn: false,
           error: "Please log in first"
@@ -46,7 +46,7 @@ router
   .post(async (req, res) => {    
     try{
       if(!req.session.user){
-        res.render("/userLogin",{
+        res.render("userLogin",{
           title: "Login",
           loggedIn: false,
           error: "Please log in first"
