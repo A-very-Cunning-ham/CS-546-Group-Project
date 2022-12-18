@@ -8,6 +8,7 @@ const helpers = require('../helpers');
 const eventData = require('./events');
 
 const createComment = async (eventID, userName, comment) => {
+	//TODO check to see if we need the time for the comment?
 	const user_collection_c = await user_collection();
 	const event_collection_c = await event_collection();
 
@@ -22,8 +23,8 @@ const createComment = async (eventID, userName, comment) => {
 	//check if user exists
 	helpers.errorIfNotProperUserName(userName, 'userName');
 	// userID = userID.trim();
-	// let user = await user_collection_c.findOne({ _id: ObjectId(userID) });
-	// if (!user) throw `No user present with id: ${userID}`;
+	let user = await user_collection_c.findOne({ username: userName });
+	if (!user) throw `No user present with username: ${userName}`;
 	//let testing = await users.checkUser(userName);
 
 	//from stack overflow

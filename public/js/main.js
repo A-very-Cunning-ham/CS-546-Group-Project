@@ -20,6 +20,7 @@
 
         $.ajax(requestConfig).then(function (responseMessage) {
           console.log(responseMessage);
+          myNewTaskForm[0].reset();
           var newElement = $(responseMessage);
           todoArea.append(newElement);
         });
