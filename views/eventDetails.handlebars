@@ -1,12 +1,16 @@
 <h1>{{info.eventName}}</h1>
-<h2>Posted by {{info.postedBy}} from {{info.college}}</h2>
-<p>{{info.description}}</p>
+<h3>Posted by {{info.postedBy}} from {{info.college}}</h3>
+<p id="desc">{{info.description}}</p>
 <p>from {{info.startTime}} to {{info.endTime}}</p>
+<p>Hosted at {{info.location}}</p>
+<p>Capacity: {{info.usersRegistered}}/{{info.capacity}}</p>
+{{#if owner}} <p>Currently registered: {{info.usersRegistered}}</p> {{/if}}
+{{#each info.tags}}<p class="tag">#{{this}} </p>{{/each}}
 
 {{#if owner}}
-    <h2>Edit Event:</h2>
+<h2 class="header2">Edit Event:</h2>
 
-<form method="PATCH" action="/created/{{info._id}}" id="editevent-form" encType="multipart/form-data">
+<form method="POST" action="/created/{{info._id}}" id="editevent-form" encType="multipart/form-data">
     <label for="eventName">Event name:</label>
     <input type="text" id="eventName" name="eventName"><br>
     <label for="location">Location:</label>
@@ -23,23 +27,9 @@
     <input type="text" id="tags" name="tags"><br>
     <label for="image">Upload image here:</label>
     <input type="file" id="image" name="image"><br>
-    <button type="submit" class="submitbutton">submit</button>
+    <button type="submit" class="submitbutton">Submit</button>
 </form>
 {{/if}}
-
-<h3>Event Details</h3>
-<ul>
-    <li>College: {{info.college}}</li>
-    <li>Location: {{info.location}}</li>
-    <li>Start Time: {{info.startTime}}</li>
-    <li>End Time: {{info.endTime}}</li>
-    <li>Posted By: {{info.postedBy}}</li>
-    <li>Tags: {{info.tags}}</li>
-    <li>Description: {{info.description}}</li>
-    <li>Capacity: {{info.capacity}}</li>
-    <li>Numbers of Users Registered: {{info.numUserRegistered}}</li>
-    {{#if owner}} <li>UsersRegistered: {{info.usersRegistered}}</li> {{/if}}
-</ul>
 
 <form method="POST" action="/events/register/{{info._id}}" id="register-btn">
     <input type="submit" value="Register For This Event">
@@ -55,7 +45,7 @@
 </form>
 
 <div id="allComments">
-    {{#each info.comment}} 
+    {{#each info.comments}} 
         <div class="comment">
             <h2>{{userName}} commented on {{commentDate}}:</h2>
             <p>{{body}}</p>
