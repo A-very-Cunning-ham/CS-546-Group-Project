@@ -79,6 +79,7 @@ const createEvent = async (
 		image: imageData,
 		college: college,
 		comments: [],
+		cancelled: false
 	};
 
 	const insertInfo = await event_collection_c.insertOne(new_event);
@@ -179,6 +180,61 @@ const deleteEvent = async (id) => {
 	}
 	return `${event.eventName} has been succesfully removed`;
 
+};
+
+const cancelEvent = async (id, username) => {
+	if (!id) throw "You must provide an ID to search for";
+	if (typeof id !== "string") throw "ID must be a string";
+	if (id.trim().length === 0)
+		throw "ID cannot be an empty string or just spaces";
+	id = id.trim();
+	if (!ObjectId.isValid(id)) throw "invalid object ID";
+
+	const event_collection_c = await event_collection();
+	const event = await getEventById(id);
+
+	if(event.postedBy != username){
+		throw "You're not authorized to modify that event"
+	}
+
+	if(event.cancelled == true){
+		throw "Event already cancelled";
+	}
+	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {cancelled: true});
+
+	if (cancelInfo.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { success: true };
+	}
+};
+
+const uncancelEvent = async (id, username) => {
+	if (!id) throw "You must provide an ID to search for";
+	if (typeof id !== "string") throw "ID must be a string";
+	if (id.trim().length === 0)
+		throw "ID cannot be an empty string or just spaces";
+	id = id.trim();
+	if (!ObjectId.isValid(id)) throw "invalid object ID";
+
+	const event_collection_c = await event_collection();
+	const event = await getEventById(id);
+
+	if(event.postedBy != username){
+		throw "You're not authorized to modify that event"
+	}
+
+	if(event.cancelled == false){
+		throw "Event isn't cancelled, can't uncancel";
+	}
+
+	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {cancelled: false});
+
+	if (cancelInfo.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { success: true };
+	}
 };
 
 const registerForEvent = async (username, eventID) => {
@@ -374,5 +430,6 @@ module.exports = {
 	getFavorites,
 	getRegistered,
 	getEventsCreatedBy,
-	searchUpcomingEvents
+	searchUpcomingEvents,
+	cancelEvent
 };
