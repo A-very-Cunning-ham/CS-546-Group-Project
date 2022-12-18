@@ -29,13 +29,15 @@ router
           res.render("eventDetails", {
             title: "Event Details",
             loggedIn: true,
-            info: eventInfo, usersRegistered: eventInfo.usersRegistered
+            owner: true,
+            info: eventInfo
           });
         }
         else{
           res.render("eventDetails", {
             title: "Event Details",
             loggedIn: true,
+            owner: false,
             info: eventInfo
           });
         }

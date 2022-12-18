@@ -30,15 +30,16 @@ router
             if(!comment) throw "Input not provided";
             helpers.errorIfNotProperID(req.params.eventId, 'eventID');
 
-            req.params.eventId = req.params.eventId.trim();
-            let event = await event_collection_c.findOne({ _id: ObjectId(req.params.eventId) });
-            if (!event) throw `No Event present with id: ${req.params.eventId}`;
+            // req.params.eventId = req.params.eventId.trim();
+            // let event = await event_collection_c.findOne({ _id: ObjectId(req.params.eventId) });
+            // if (!event) throw `No Event present with id: ${req.params.eventId}`;
 
-            let user = await user_collection_c.findOne({ _id: ObjectId(commentData.userId) });
-            if (!user) throw `No user present with id: ${commentData.userId}`;
+            // let user = await user_collection_c.findOne({ _id: ObjectId(commentData.userId) });
+            // if (!user) throw `No user present with id: ${commentData.userId}`;hi
 
             const newComment = await comments.createComment(req.params.eventId, req.session.user, xss(comment));
-            res.render('partials/comment', {layout: null, loggedIn: true, title: "Event Details", commenter: req.session.user, comment: comment, url: req.params.eventId});
+            currTime = new Date();
+            res.render('partials/comment', {layout: null, loggedIn: true, title: "Event Details", commenter: req.session.user, comment: comment, time: currTime});
         }catch(e){
             console.log(e);
             res.status(400);

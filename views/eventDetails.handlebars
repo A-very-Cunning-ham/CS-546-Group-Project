@@ -1,5 +1,34 @@
 <h1>{{info.eventName}}</h1>
 
+{{#if owner}}
+<h2>You are the owner of this event!</h2>
+<h3>Event Details</h3>
+<ul>
+    <li>College: {{info.college}}</li>
+    <li>Location: {{info.location}}</li>
+    <li>Start Time: {{info.startTime}}</li>
+    <li>End Time: {{info.endTime}}</li>
+    <li>Posted By: {{info.postedBy}}</li>
+    <li>Tags: {{info.tags}}</li>
+    <li>Description: {{info.description}}</li>
+    <li>Capacity: {{info.capacity}}</li>
+    <li>Numbers of Users Registered: {{info.numUserRegistered}}</li>
+    <li>UsersRegistered: {{info.usersRegistered}}</li>
+</ul>
+{{else}}
+<h3>Event Details</h3>
+<ul>
+    <li>College: {{info.college}}</li>
+    <li>Location: {{info.location}}</li>
+    <li>Start Time: {{info.startTime}}</li>
+    <li>End Time: {{info.endTime}}</li>
+    <li>Posted By: {{info.postedBy}}</li>
+    <li>Tags: {{info.tags}}</li>
+    <li>Description: {{info.description}}</li>
+    <li>Capacity: {{info.capacity}}</li>
+    <li>Numbers of Users Registered: {{info.numUserRegistered}}</li>
+</ul>
+{{/if}}
 
 <form method="POST" action="/events/register/{{info._id}}" id="register-btn">
     <input type="submit" value="Register For This Event">
@@ -14,7 +43,13 @@
     <button type="submit">submit</button>
 </form>
 
-<ul id="allComments"></ul>
+<div id="allComments">
+    {{#each info.comment}} 
+        <div class="comment">
+            <p>{{body}}   -{{userName}} on {{commentDate}}</p>
+        </div>
+    {{/each}}
+</div>
 
 <div id="error" hidden>I'm an error</div>
 
