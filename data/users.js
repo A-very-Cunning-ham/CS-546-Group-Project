@@ -82,7 +82,7 @@ const getUserData = async (username) => {
 	}
 
 	const user_collection_c = await user_collection();
-	username = username.toLowerCase();
+	username = username.toLowerCase().trim();
 	let user = await user_collection_c.findOne({ username: username });
 	if (!user) throw `User not present`;
 
@@ -98,6 +98,7 @@ const deregEvent = async (username, id) => {
 	}
 	const user_collection_c = await user_collection();
 	const userData = await getUserData(username);
+	// FIXME: this doesn't seem to modify the DB
 	for(let i = 0; i < userData.eventsRegistered.length; i++){
 		if(userData.eventsRegistered[i] == id){
 			userData.eventsRegistered.push(userData.eventsRegistered[i]);

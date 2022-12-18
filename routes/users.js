@@ -274,6 +274,7 @@ router
         res.redirect("/login");
       }
     }catch(e){
+      console.log(e);
       res.status(400);
     }
   })
