@@ -125,7 +125,8 @@ router
       if (register.userInserted==true){
         res.render("registeredEvents", {
           title: "Registered Events",
-          loggedIn: true
+          loggedIn: true,
+          username: req.session.user
         });
       }else{
         throw "Was not able to register for event";

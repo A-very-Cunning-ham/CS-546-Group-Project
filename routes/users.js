@@ -182,6 +182,7 @@ router
         }else{
           res.render("createEvent",{
             title: "Create An Event",
+            username: req.session.user,
             loggedIn: true
           });
         }
@@ -258,6 +259,7 @@ router
         console.error(e);
           res.status(400).render("createEvent", {
             title: "Created Events", loggedIn: true,
+            username: req.session.user,
             error: e
           });
       }
@@ -266,6 +268,7 @@ router
     }catch(e){
         res.status(400).render("createEvent", {
           title: "Created Events", loggedIn: true,
+          username: req.session.user,
           error: e
         });
     }
@@ -282,6 +285,7 @@ router
         res.render("registeredEvents", {
           title: "Registered Events",
           loggedIn: true,
+          username: req.session.user,
           event: registered 
         });
       }
@@ -325,7 +329,8 @@ router
           res.render("createdEvents", {
             title: "Created Events",
             loggedIn: true,
-            event: createdEvents
+            event: createdEvents,
+            username: req.session.user,
           });
         }
         else{
@@ -351,6 +356,7 @@ router
         res.render("eventId", {
           title: "Event Details",
           loggedIn: true,
+          username: req.session.user,
           info: info
         });
       }catch(e){
@@ -387,6 +393,7 @@ router
         res.render("favorited", {
           title: "Favorited Events",
           loggedIn: true,
+          username: req.session.user,
           event: favorited
         });
       }catch(e){
