@@ -39,7 +39,7 @@ const createEvent = async (
 	if (tags) {
 		for (let i=0;i<tags.length;i++){
 			tags[i] = tags[i].trim();
-			helpers.errorIfNotProperString(tags[i], "tags");
+			helpers.errorIfNotProperString(tags[i], "tag " i+1);
 		  }
 		// TODO: trim whitespace
 	}
