@@ -138,6 +138,30 @@ const getUpcomingEvents = async (college) => {
 	return res;
 };
 
+const searchUpcomingEvents = async (college, searchTerm) => {
+	helpers.errorIfNotProperString(searchTerm, "Search Term");
+	searchTerm = searchTerm.trim().toLowerCase();
+
+	if(searchTerm.length < 3){
+		throw "Search term must be at least 2 characters"
+	}
+
+	
+	// college parameter checking is handled by getUpcomingEvents()
+	let upcomingEvents = await getUpcomingEvents(college);
+
+	const res = upcomingEvents.filter(event => 
+		event.eventName.toLowerCase().includes(searchTerm) || event.description.toLowerCase().includes(searchTerm)
+		);
+
+	if(!res){
+		throw "No matching results found";
+	}
+
+	return res;
+};
+
+
 const deleteEvent = async (id) => {
 	if (!id) throw "You must provide an ID to search for";
 	if (typeof id !== "string") throw "ID must be a string";
@@ -349,5 +373,6 @@ module.exports = {
 	deleteEvent,
 	getFavorites,
 	getRegistered,
-	getEventsCreatedBy
+	getEventsCreatedBy,
+	searchUpcomingEvents
 };
