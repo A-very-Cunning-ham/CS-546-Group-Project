@@ -142,6 +142,28 @@ router
   });
 
 router
+  .route('/edit/:id')
+  .post(async (req, res) => {
+    try{
+      if(!req.params.id) throw "Event ID not given";
+      if (!req.session.user){
+        res.render("userLogin", {
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
+        return;
+      }
+      //TODO edit the event in this route
+    }catch(e){
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
+    }
+  });
+
+router
   .route('/unregister/:id')
   .post(async (req, res) => {
     try{

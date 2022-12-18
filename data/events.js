@@ -37,8 +37,10 @@ const createEvent = async (
 	if (!user) throw `No user present with userName: ${postedBy}`;
 
 	if (tags) {
-		helpers.errorIfNotProperString(tags, "Tags");
-		tags = tags.split(",");
+		for (let i=0;i<tags.length;i++){
+			tags[i] = tags[i].trim();
+			helpers.errorIfNotProperString(tags[i], "tag " +(i+1));
+		  }
 		// TODO: trim whitespace
 	}
 	helpers.errorIfNotProperString(description, "description");
