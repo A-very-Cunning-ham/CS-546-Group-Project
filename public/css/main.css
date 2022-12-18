@@ -6,7 +6,7 @@ body {
     margin: 0;
     background-color: #555555;
     padding: 20px;
-    font-size:16pt;
+    font-size:14pt;
     
 }
 
@@ -65,6 +65,7 @@ h2 {
 p {
     color:#222222;
     margin:5px;
+    font-size:14pt;
 }
 .error {
     color:crimson;
@@ -78,13 +79,36 @@ button {
     font-size: 12pt;
     color:#222222;
 }
-
-#btn {
-    font-size:10pt;
-    color:#222222;
-
+#searchform {
+    display:inline;
+    margin: 30px;
+}
+#searchinput {
+    border:2px #555555;
+    padding:4px;
+    font-size:14pt;
+    font-family:'Times New Roman', Times, serif;
 }
 .comment {
     font-size:14pt;
     color:#222222;
+}
+#welcome {
+    font-size:14pt;
+    color:#222222;
+}
+#desc {
+    font-size:16pt;
+    color:#222222;
+    text-indent:15px;
+    margin: 10px;
+    border-left: 2pt solid #222222 
+}
+#register-btn {
+    margin:15px;
+    display:inline;
+}
+#favorite-btn {
+    margin:15px;
+    display:inline;
 }

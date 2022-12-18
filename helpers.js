@@ -56,6 +56,7 @@ function errorIfStringHasNumber(val, variableName) {
 }
 
 function errorIfStringIsNotNumber(val, variableName, errorMessage) {
+	errorIfNotProperString(val);
 	if (val == undefined) {
 		if (errorMessage) throw errorMessage;
 		else throw `${variableName || 'Input String'} is not number`;
