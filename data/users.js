@@ -2,6 +2,8 @@ const mongoCollections = require("../config/mongoCollections");
 const helpers = require("../helpers");
 const user_collection = mongoCollections.user_collection;
 const bcrypt = require("bcrypt");
+
+// TODO: increase salt rounds for better security
 const saltRounds = 4;
 
 const createUser = async (username, password, firstName, lastName, college) => {
@@ -10,10 +12,8 @@ const createUser = async (username, password, firstName, lastName, college) => {
 	helpers.errorIfNotProperName(firstName, "firstName");
 	helpers.errorIfNotProperName(lastName, "lastName");
 
-	username.trim();
-	password.trim();
-
-	username = username.toLowerCase();
+	username = username.trim().toLowerCase();
+	password = password.trim();
 
 	const user_collection_c = await user_collection();
 
@@ -65,12 +65,10 @@ const checkUser = async (username, password) => {
 	if (!user) throw `Either the username or password is invalid`;
 
 	if (await bcrypt.compare(password, user.password)) {
-		return { authenticatedUser: true };
+		return { authenticatedUser: true, username: user.username  };
 	} else {
 		throw `Either the username or password is invalid`;
 	}
-
-	return user;
 };
 
 const getUserData = async (username) => {
