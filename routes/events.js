@@ -55,9 +55,10 @@ router
           error: "Please log in first"
         })
         return;
-      }
+      } 
       let eventInfo = await events.getEventById(req.params.id);
         if(req.session.user == eventInfo.postedBy){
+          console.log(eventInfo);
           res.render("eventDetails", {
             title: "Event Details",
             loggedIn: true,
