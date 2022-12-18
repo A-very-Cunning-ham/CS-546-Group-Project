@@ -269,7 +269,6 @@ const registerForEvent = async (username, eventID) => {
 			console.log("Capacity reached")
 			throw "Event capacity already reached, can't register";
 		}
-		console.log("no errors")
 
 	// TODO: maybe use a transaction here to ensure collections stay in sync
 	let eventUpdated = await event_collection_c.updateOne(
@@ -290,7 +289,69 @@ const registerForEvent = async (username, eventID) => {
 	}
 }
 
-const favoritedEventsSwitch = async (username, eventID) => {
+const unregisterForEvent = async (username, eventID) => {
+	//TODO: check for conflicting events
+	helpers.errorIfNotProperUserName(username);
+	username = username.trim().toLowerCase();
+	const event_collection_c = await event_collection();
+	const user_collection_c = await user_collection();
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+
+	// TODO: maybe use a transaction here to ensure collections stay in sync
+	let eventUpdated = await event_collection_c.updateOne(
+		{ _id: ObjectId(eventID) },
+		{$pull: { usersRegistered: username } ,
+		 $inc: { numUserRegistered: -1}}
+	);
+
+	let userUpdated = await user_collection_c.updateOne(
+		{ username: username },
+		{$pull: { eventsRegistered: eventID }}
+	);
+
+	if (eventUpdated.acknowledged == false || userUpdated.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { userInserted: true };
+	}
+}
+
+const favoriteEvent = async (username, eventID) => {
+	helpers.errorIfNotProperUserName(username);
+	const event_collection_c = await event_collection();
+	const user_collection_c = await user_collection();
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+	username = username.toLowerCase().trim();
+
+	let user = await user_collection_c.findOne({username: username});
+	if (!user) throw "Could not find user";
+
+	let res = "";
+	console.log(user.favoriteEvents);
+
+	if (user.favoriteEvents.includes(eventID)){
+		throw "You already favorited that event";
+	} else{
+		res = await user_collection_c.updateOne(
+			{ username: username },
+			{ $push: { favoriteEvents: eventID } }
+		);
+	}
+
+	if (res.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { success: true };
+	}
+}
+
+const unfavoriteEvent = async (username, eventID) => {
 	helpers.errorIfNotProperUserName(username);
 	const event_collection_c = await event_collection();
 	const user_collection_c = await user_collection();
@@ -302,24 +363,21 @@ const favoritedEventsSwitch = async (username, eventID) => {
 	let user = await user_collection_c.findOne({username: username});
 	if (!user) throw "Could not find user";
 
-	let res = "";
+	let res;
 
-	if (user.favoritedEvents.includes(eventID)){
+	if (user.favoriteEvents.includes(eventID)){
 		res = await user_collection_c.updateOne(
 			{ username: username },
-			{ $pull: { favoritedEvents: eventID } }
+			{ $pull: { favoriteEvents: eventID } }
 		);
 	} else{
-		res = await user_collection_c.updateOne(
-			{ username: username },
-			{ $push: { favoritedEvents: eventID } }
-		);
+		throw "You already have that unfavorited";
 	}
 
 	if (res.acknowledged == false) {
 		throw `Server Error`;
 	} else {
-		return { favoritedEventSwitched: true };
+		return { success: true };
 	}
 }
 
@@ -425,12 +483,14 @@ module.exports = {
 	getEventById, 
 	getUpcomingEvents,
 	registerForEvent,
-	favoritedEventsSwitch,
+	unregisterForEvent,
 	deleteEvent,
 	getFavorites,
 	getRegistered,
 	getEventsCreatedBy,
 	searchUpcomingEvents,
 	cancelEvent,
-	uncancelEvent
+	uncancelEvent,
+	favoriteEvent,
+	unfavoriteEvent
 };
