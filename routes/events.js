@@ -120,15 +120,7 @@ router
         });
         return;
       }
-      let register = await events.registerForEvent(req.session.user, req.params.id);
-      if (register.userInserted==true){
-        res.render("registeredEvents", {
-          title: "Registered Events",
-          loggedIn: true
-        });
-      }else{
-        throw "Was not able to register for event";
-      }
+      //TODO edit the event in this route
     }catch(e){
       res.status(400).render("errorPage",{
         title: "Error",

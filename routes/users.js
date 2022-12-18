@@ -217,7 +217,8 @@ router
             createData.tags = createData.tags.split(",");
             for (let i=0;i<createData.tags.length;i++){//goes through tags array and checks each to see if it s a valid string and trims them
               createData.tags[i] = createData.tags[i].trim();
-              helpers.errorIfNotProperString(createData.tags[i], "tagszz");
+              helpers.errorIfNotProperString(createData.tags[i], "tags");
+              helpers.errorIfNotProperString(createData.tags[i], "tag "+(i+1));
             }
 
             helpers.errorIfNotProperString(createData.description, "description");
