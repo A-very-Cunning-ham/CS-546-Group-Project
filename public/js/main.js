@@ -53,6 +53,17 @@ let tagsElement = document.getElementById("tags");
 let imageElement = document.getElementById("image");
 let error2 = document.getElementById("error2");
 
+let myEditForm = document.getElementById("editevent-form");
+let editeventNameElement = document.getElementById("editeventName");
+let editlocationElement = document.getElementById("editlocation");
+let editstartElement = document.getElementById("editstartTime");
+let editendElement = document.getElementById("editendTime");
+let editdesElement = document.getElementById("editdescription");
+let editcapacityElement = document.getElementById("editcapacity");
+let edittagsElement = document.getElementById("edittags");
+let editimageElement = document.getElementById("editimage");
+let error0 = document.getElementById("error0");
+
 
 if(myForm){
     myForm.addEventListener('submit', (event) => {
@@ -468,7 +479,92 @@ if(myCreateForm){
             error2.hidden = false;  
             error2.innerHTML = "Cannot leave blank inputs";
             eventNameElement.focus();
-            console.log("error");
+            console.log("error2");
+            return;
+        }
+    });
+}
+
+if(myEditForm){
+    myEditForm.addEventListener('submit', (event) => {
+        error0.hidden = true;
+        // error.hidden = false;
+        // error.innerHTML = "Errors checking";
+        // console.log("error");
+        //name, loc, description, tags checks
+        if (editeventNameElement.value.trim() && editlocationElement.value.trim() && editdesElement.value.trim() && edittagsElement.value.trim()) {
+            if (typeof(editeventNameElement.value) !== 'string' || typeof(editlocationElement.value) !== 'string' || typeof(editdesElement.value) !== 'string' || typeof(edittagsElement.value) !== 'string') {
+                event.preventDefault();
+                myEditForm.reset();
+                error0.hidden = false;  
+                error0.innerHTML = "All input variables must be a string";
+                editeventNameElement.focus();
+                console.log("error0");
+                return;
+            }
+            //cap check
+            if (isNaN(editcapacityElement.value)) {
+                event.preventDefault();
+                myEditForm.reset();
+                error0.hidden = false;  
+                error0.innerHTML = "Capacity must be a number";
+                eventNameElement.focus();
+                console.log("error0");
+                return;
+            }
+            capacity = parseFloat(editcapacityElement.value);
+
+            if (capacity < 1 || capacity % 1 > 0) {
+                event.preventDefault();
+                myEditForm.reset();
+                error0.hidden = false;  
+                error0.innerHTML = "Invalid capacity";
+                editeventNameElement.focus();
+                console.log("error0");
+                return;
+            }
+            //date check
+            if (Date.parse(editstartElement.value) >= Date.parse(editendElement.value)) {
+                event.preventDefault();
+                myEditForm.reset();
+                error0.hidden = false;  
+                error0.innerHTML = "Start time must be before end time";
+                editeventNameElement.focus();
+                console.log("error0");
+                return;
+            }
+            //image check
+            if (editimageElement.value.size > 1024 * 1024 * 5) {
+                event.preventDefault();
+                myEditForm.reset();
+                error0.hidden = false;  
+                error0.innerHTML = "Image size must be smaller than 5";
+                editeventNameElement.focus();
+                console.log("error0");
+                return;
+            }
+        
+            if (!editimageElement.mimetype.includes("image")) {
+                event.preventDefault();
+                myEditForm.reset();
+                error0.hidden = false;  
+                error0.innerHTML = "File must be an image";
+                editeventNameElement.focus();
+                console.log("error0");
+                return;
+            }
+        }
+        else{
+            event.preventDefault();
+            editeventNameElement.value = '';
+            editlocationElement.value = '';
+            editdesElement.value = '';
+            edittagsElement.value = '';
+            myEditForm.reset();
+            error0.hidden = false;  
+            error0.innerHTML = "Cannot leave blank inputs";
+            editeventNameElement.focus();
+            console.log("error0");
             return;
         }
     });
