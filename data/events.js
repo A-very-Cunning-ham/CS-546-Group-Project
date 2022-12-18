@@ -191,6 +191,7 @@ const registerForEvent = async (username, eventID) => {
 		}
 		console.log("no errors")
 
+	// TODO: maybe use a transaction here to ensure collections stay in sync
 	let eventUpdated = await event_collection_c.updateOne(
 		{ _id: ObjectId(eventID) },
 		{$push: { usersRegistered: username } ,
