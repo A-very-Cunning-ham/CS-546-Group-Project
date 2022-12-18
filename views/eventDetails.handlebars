@@ -1,0 +1,22 @@
+<h1>{{info.eventName}}</h1>
+
+
+<form method="POST" action="/events/register/{{info._id}}" id="register-btn">
+    <input type="submit" value="Register For This Event">
+</form>
+<form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
+    <input type="submit" value="Add Event To Favorites">
+</form>
+
+<form method="POST" action="/comments/{{info._id}}" id="makecomment-form">
+    <label for="comment">Comment:</label>
+    <input type="text" id="comment" name="comment">
+    <button type="submit">submit</button>
+</form>
+
+<ul id="allComments"></ul>
+
+<div id="error" hidden>I'm an error</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/public/js/main.js"></script>

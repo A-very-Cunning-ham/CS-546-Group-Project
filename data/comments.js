@@ -24,7 +24,7 @@ const createComment = async (eventID, userName, comment) => {
 	// userID = userID.trim();
 	// let user = await user_collection_c.findOne({ _id: ObjectId(userID) });
 	// if (!user) throw `No user present with id: ${userID}`;
-	users.checkUser(userName);
+	//let testing = await users.checkUser(userName);
 
 	//from stack overflow
 
@@ -44,6 +44,7 @@ const createComment = async (eventID, userName, comment) => {
 		{ _id: ObjectId(eventID) },
 		{ $push: { comment: newReview } }
 	);
+	return newReview;
 };
 
 const getAllCommentForEvent = async (eventID) => {
