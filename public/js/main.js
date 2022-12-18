@@ -1,4 +1,3 @@
-var $ = jQuery;
 (function ($) {
   var myNewTaskForm = $('#makecomment-form');
   var newNameInput = $('#comment');
@@ -10,7 +9,6 @@ var $ = jQuery;
     var newName = newNameInput.val();
 
     if (newName) {
-        console.log(myNewTaskForm.value);
         var requestConfig = {
           method: 'POST',
           url: myNewTaskForm[0].action,
