@@ -123,8 +123,6 @@ router
       }
       let register = await events.registerForEvent(req.session.user, req.params.id);
       if (register.userInserted==true){
-        let eventUpdate = await events.getEventById(req.params.id);
-        eventUpdate.capacity - 1;
         res.render("registeredEvents", {
           title: "Registered Events",
           loggedIn: true,
