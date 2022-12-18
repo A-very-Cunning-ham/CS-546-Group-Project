@@ -6,6 +6,7 @@ const users = data.users;
 const events = data.events;
 const helpers = require("../helpers");
 const xss = require('xss');
+const { createUser } = require("../data/users");
 
 const maxImageSizeMB = 16;
 
@@ -195,12 +196,13 @@ router
   })
   .post(async (req, res) => {
     // TODO: protect this route!
-    const createData = req.body;
     try{
         if(!req.session.user){
           res.redirect("/login");
           return;
         }
+        const createData = req.body;
+        console.log(createData);
         if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.tags 
             || !createData.description || !createData.capacity) throw "An input is missing!";
             helpers.errorIfNotProperString(xss(createData.eventName), "eventName");
@@ -212,10 +214,12 @@ router
             }
 
             let image = req.files.image;
-          
+
+            createData.tags = createData.tags.split(",");
             for (let i=0;i<createData.tags.length;i++){//goes through tags array and checks each to see if it s a valid string and trims them
-              helpers.errorIfNotProperString(createData.tags[i], "tags");
               createData.tags[i] = createData.tags[i].trim();
+              helpers.errorIfNotProperString(createData.tags[i], "tags");
+              helpers.errorIfNotProperString(createData.tags[i], "tag "+(i+1));
             }
 
             helpers.errorIfNotProperString(xss(createData.description), "description");
@@ -317,7 +321,7 @@ router
 
 
   router
-    .route('/created')
+    .route('/created')//"Your Events"
     .get(async (req, res) => {
       try{
         if(req.session.user){
@@ -366,22 +370,21 @@ router
           error: e
         });
       }
-    });
-    // .post(async (req,res) => {    
-    //   try{
-    //     if(!req.session.user){
-    //       res.redirect("login");
-    //     }
-    //     if(!req.params.id) throw "Event ID not given";
-    //     let del = await events.deleteEvent(req.params.id);
-    //     res.redirect("/created");
-    //   }catch(e){
-    //     res.status(400).render("errorPage",{
-    //       title: "Error",
-    //       error: e
-    //     });
-    //   }
-    // });
+    })
+    .post(async (req,res) => {    
+      try{//TODO: currently deletes the event
+        if(!req.session.user){
+          res.redirect("login");
+        }
+        if(!req.params.id) throw "Event ID not given";
+        //let del = await events.deleteEvent(req.params.id);
+        res.redirect("/created");
+      }catch(e){
+        res.status(400).render("errorPage",{
+          title: "Error",
+          error: e
+        });
+      }
 
   router
     .route('/favorited')
