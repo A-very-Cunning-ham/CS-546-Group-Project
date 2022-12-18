@@ -106,7 +106,36 @@ router
       });
     }
   });
-    
+
+router
+  .route('/edit/:id')
+  .post(async (req, res) => {
+    try{
+      if(!req.params.id) throw "Event ID not given";
+      if (!req.session.user){
+        res.render("userLogin", {
+          title: "Login",
+          loggedIn: false,
+          error: "Please log in first"
+        });
+        return;
+      }
+      let register = await events.registerForEvent(req.session.user, req.params.id);
+      if (register.userInserted==true){
+        res.render("registeredEvents", {
+          title: "Registered Events",
+          loggedIn: true
+        });
+      }else{
+        throw "Was not able to register for event";
+      }
+    }catch(e){
+      res.status(400).render("errorPage",{
+        title: "Error",
+        error: e
+      });
+    }
+  });
 
 router
   .route('/register/:id')
