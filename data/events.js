@@ -117,13 +117,12 @@ const editEvent = async (
 		throw `StartTime can't come after endTime`;
 	}
 
-
 	if (tags) {
+		tags = tags.split(",");
 		for (let i=0;i<tags.length;i++){
 			tags[i] = tags[i].trim();
 			helpers.errorIfNotProperString(tags[i], "tag " +(i+1));
 		  }
-		// TODO: trim whitespace
 	}
 	helpers.errorIfNotProperString(description, "description");
 
@@ -156,7 +155,8 @@ const editEvent = async (
 		updateEvent.image = imageData;
 	}
 
-	const updateInfo = await event_collection_c.updateOne({_id: ObjectId(eventID)}, {updateEvent});
+
+	const updateInfo = await event_collection_c.updateOne({_id: ObjectId(eventID)}, {$set: updateEvent});
 
 
 	if (updateInfo.insertedCount === 0) {
