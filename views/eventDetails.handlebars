@@ -14,19 +14,19 @@
 
 <form method="POST" action="/edit/{{info._id}}" id="editevent-form" encType="multipart/form-data">
     <label for="eventName">Event name:</label>
-    <input type="text" id="editeventName" value={{info.eventName}} name="eventName"><br>
+    <input type="text" id="editeventName" value="{{info.eventName}}" name="eventName"><br>
     <label for="location">Location:</label>
-    <input type="text" id="editlocation" name="location" value={{info.location}}><br>
+    <input type="text" id="editlocation" name="location" value="{{info.location}}"><br>
     <label for="startTime">Start time:</label>
-    <input type="datetime-local" id="editstartTime" name="startTime" value={{info.startTime}}><br>
+    <input type="datetime-local" id="editstartTime" name="startTime" value="{{info.startTime}}"><br>
     <label for="endTime">End time:</label>
-    <input type="datetime-local" id="editendTime" name="endTime" value={{info.endTime}}><br>
+    <input type="datetime-local" id="editendTime" name="endTime" value="{{info.endTime}}"><br>
     <label for="description">Description:</label>
-    <input type="text" id="editdescription" name="description" value={{info.description}}><br>
+    <input type="text" id="editdescription" name="description" value="{{info.description}}"><br>
     <label for="capacity">Capacity:</label>
-    <input type="number" min="1" id="editcapacity" name="capacity" value={{info.capacity}}><br>
+    <input type="number" min="1" id="editcapacity" name="capacity" value="{{info.capacity}}"><br>
     <label for="tags">Tags:</label>
-    <input type="text" id="edittags" name="tags" value={{info.tags}}><br>
+    <input type="text" id="edittags" name="tags" value="{{info.tags}}"><br>
     <label for="image">Upload image here:</label>
     <input type="file" id="editimage" name="image"><br>
     <button type="submit" class="submitbutton">Submit</button>
