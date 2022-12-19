@@ -60,7 +60,7 @@ h2 {
 }
 .tag {
     display:inline;
-    color:cornflowerblue;
+    color:#548ce8;
 }
 p {
     color:#222222;
@@ -81,12 +81,13 @@ button {
 }
 #searchform {
     display:inline;
-    margin: 30px;
+    margin:5px;
 }
 #searchinput {
     border:2px #555555;
     padding:4px;
     font-size:14pt;
+    width:150px;
     font-family:'Times New Roman', Times, serif;
 }
 .comment {
@@ -126,4 +127,8 @@ button {
     margin-left:auto;
     margin-right:auto;
     width:25%;
+}
+
+.header2 {
+    margin-left:10px;
 }

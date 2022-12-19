@@ -18,9 +18,10 @@
                 <li><a href="/registered">Your Registered Events</a></li>
                 <li><a href="/favorited">Your Favorited Events</a></li>
                 <li><a href="/logout">Log Out</a></li>
-                <li><form method="POST" id="searchform" action="/events/search">
-                        <input type="text" placeholder="search" id="searchinput" name="search">
-                    </form></li>
+                <li><label for="searchinput">Search:</label>
+                <form method="POST" id="searchform" action="/events/search">
+                <input type="text" placeholder="search" id="searchinput" name="search">
+                </form></li>
             </ul>
         </header>
     {{else}}
