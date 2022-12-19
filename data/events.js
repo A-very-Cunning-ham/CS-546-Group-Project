@@ -274,7 +274,7 @@ const cancelEvent = async (id, username) => {
 	if(event.cancelled == true){
 		throw "Event already cancelled";
 	}
-	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {cancelled: true});
+	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {$set:{cancelled: true}});
 
 	if (cancelInfo.acknowledged == false) {
 		throw `Server Error`;
@@ -302,7 +302,7 @@ const uncancelEvent = async (id, username) => {
 		throw "Event isn't cancelled, can't uncancel";
 	}
 
-	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {cancelled: false});
+	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {$set:{cancelled: false}});
 
 	if (cancelInfo.acknowledged == false) {
 		throw `Server Error`;

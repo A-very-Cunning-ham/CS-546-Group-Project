@@ -12,6 +12,16 @@
 
 <div class="error" id="error0" hidden>Im an error</div>
 
+{{#if info.cancelled}}
+<form method="POST" action="/events/uncancel/{{info._id}}" id="cancel-btn">
+    <input type="submit" value="Uncancel This Event For All Users">
+</form>
+{{else}}
+<form method="POST" action="/events/cancel/{{info._id}}" id="cancel-btn">
+    <input type="submit" value="Cancel This Event For All Users">
+</form>
+{{/if}}
+
 <form method="POST" action="/created/{{info._id}}" id="editevent-form" encType="multipart/form-data">
     <label for="eventName">Event name:</label>
     <input type="text" id="editeventName" name="eventName"><br>
@@ -33,12 +43,27 @@
 </form>
 {{/if}}
 
+{{#if registered}}
+<form method="POST" action="/events/unregister/{{info._id}}" id="register-btn">
+    <input type="submit" value="Unregister For This Event">
+</form>
+{{else}}
 <form method="POST" action="/events/register/{{info._id}}" id="register-btn">
     <input type="submit" value="Register For This Event">
 </form>
+{{/if}}
+
+{{#if favorited}}
+<form method="POST" action="/events/unfavorite/{{info._id}}" id="favorite-btn">
+    <input type="submit" value="Remove From Favorites">
+</form>
+{{else}}
 <form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
     <input type="submit" value="Add Event To Favorites">
 </form>
+{{/if}}
+
+
 
 <form method="POST" action="/comments/{{info._id}}" id="makecomment-form">
     <label for="comment">Comment:</label>
