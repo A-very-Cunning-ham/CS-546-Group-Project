@@ -6,7 +6,7 @@ const e = require("express");
 const users = data.users;
 const events = data.events;
 const helpers = require("../helpers");
-const xss = require('xss');
+const xss = require("xss");
 
 const maxImageSizeMB = 5;
 
@@ -14,7 +14,7 @@ const maxImageSizeMB = 5;
   .route('/search')
   .post(async (req, res) => {
     try{
-      helpers.errorIfNotProperString(req.body.search);
+      helpers.errorIfNotProperString(xss(req.body.search));
 
       if(req.body.search.length < 3){
         throw "Search term must be at least 2 characters"
@@ -22,13 +22,13 @@ const maxImageSizeMB = 5;
       req.body.search = req.body.search.trim();
       if (req.session.user){
         const userData = await users.getUserData(req.session.user);
-        const upcomingEvents = await events.searchUpcomingEvents(userData.college, req.body.search);
+        const upcomingEvents = await events.searchUpcomingEvents(userData.college, xss(req.body.search));
         res.render("homepage", {
           loggedIn: true,
           username: req.session.user,
           college: userData.college,
           event: upcomingEvents,
-          searchTerm: req.body.search
+          searchTerm: xss(req.body.search)
         });
     } else{
       res.redirect("/");
