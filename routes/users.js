@@ -196,7 +196,6 @@ router
     }
   })
   .post(async (req, res) => {
-    // TODO: protect this route!
     try{
         if(!req.session.user){
           res.redirect("/login");

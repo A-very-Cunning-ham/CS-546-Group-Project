@@ -8,6 +8,7 @@ const events = data.events;
 const helpers = require("../helpers");
 const xss = require("xss");
 
+const maxImageSizeMB = 5;
 
   router
   .route('/search')
@@ -125,24 +126,91 @@ router
 router
   .route('/edit/:id')
   .post(async (req, res) => {
+    // using a post instead of patch because of HTML form behavior
     try{
-      if(!req.params.id) throw "Event ID not given";
-      if (!req.session.user){
-        res.render("userLogin", {
-          title: "Login",
-          loggedIn: false,
-          error: "Please log in first"
-        });
+      if(!req.session.user){
+        res.redirect("/login");
         return;
       }
-      //TODO edit the event in this route
-    }catch(e){
-      res.status(400).render("errorPage",{
+      if(!req.params.id) throw "Event ID not given";
+      // TODO: check if user has permission to edit
+      const createData = req.body;
+      
+      if(!createData.eventName || !createData.location || !createData.startTime || !createData.endTime || !createData.tags 
+          || !createData.description || !createData.capacity) throw "An input is missing!";
+          helpers.errorIfNotProperString(xss(createData.eventName), "eventName");
+          helpers.errorIfNotProperString(xss(createData.location), "location");
+          helpers.errorIfNotProperDateTime(xss(createData.startTime));
+          helpers.errorIfNotProperDateTime(xss(createData.endTime));
+          if (Date.parse(createData.startTime) >= Date.parse(createData.endTime)) {
+            throw `StartTime can't after endTime`;
+          }
+
+          
+
+          createData.tags = createData.tags.split(",");
+          for (let i=0;i<createData.tags.length;i++){//goes through tags array and checks each to see if it s a valid string and trims them
+            createData.tags[i] = createData.tags[i].trim();
+            helpers.errorIfNotProperString(createData.tags[i], "tags");
+            helpers.errorIfNotProperString(createData.tags[i], "tag "+(i+1));
+          }
+
+          helpers.errorIfNotProperString(xss(createData.description), "description");
+        
+          helpers.errorIfStringIsNotNumber(xss(createData.capacity));
+          capacity = parseFloat(createData.capacity);
+        
+          if (capacity < 1 || capacity % 1 > 0) {
+            throw `Invalid Capacity provided`;
+          }
+
+          let image = null;
+
+          if(req.files){
+            image = req.files.image;
+            console.log("got an image");
+        
+            if (image.size > (1024 * 1024 * maxImageSizeMB)) {
+              throw `Image size must be below ${maxImageSizeMB} MB`;
+            }
+          
+            if (!image.mimetype.includes("image")) {
+              throw `File must be an image`;
+            }
+          }
+
+      //rest of error checking all input
+
+      
+    let event = await events.editEvent(
+      req.params.id,
+      xss(createData.eventName), 
+      xss(createData.location), 
+      xss(createData.startTime), 
+      xss(createData.endTime), 
+      xss(createData.tags), 
+      xss(createData.description), 
+      xss(createData.capacity), 
+      image);
+
+    if(event.success){
+      res.redirect("/events/" + req.params.id);
+    }
+    else{
+        res.status(500).render("errorPage", {
+          error: "Internal Server Error. Try Again"
+        });
+      }
+
+  }catch(e){
+      res.status(400).render("errorPage", {
         title: "Error",
         error: e
       });
-    }
-  });
+  }
+
+});
+
 
   router
   .route('/unregister/:id')
