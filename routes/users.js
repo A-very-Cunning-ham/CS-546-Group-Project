@@ -384,7 +384,7 @@ router
           title: "Error",
           error: e
         });
-      }
+      }});
 
   router
     .route('/favorited')

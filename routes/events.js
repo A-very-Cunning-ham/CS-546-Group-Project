@@ -57,22 +57,33 @@ router
         return;
       }
       let eventInfo = await events.getEventById(req.params.id);
-        if(req.session.user == eventInfo.postedBy){
-          res.render("eventDetails", {
-            title: "Event Details",
-            loggedIn: true,
-            owner: true,
-            info: eventInfo
-          });
-        }
-        else{
-          res.render("eventDetails", {
-            title: "Event Details",
-            loggedIn: true,
-            owner: false,
-            info: eventInfo
-          });
-        }
+
+      let info = {
+        title: "Event Details",
+        loggedIn: true,
+        owner: false,
+        registered: false,
+        favorited: false,
+        info: eventInfo
+      }
+
+      if(req.session.user == eventInfo.postedBy){
+        info.owner = true;
+      }
+
+      let userDetails = await users.getUserData(req.session.user);
+
+      if(userDetails.eventsRegistered.includes(req.params.id)){
+        info.registered = true;
+      }
+
+      if(userDetails.favoriteEvents.includes(req.params.id)){
+        info.favorited = true;
+      }
+
+
+      res.render("eventDetails", info);
+        
     }catch(e){
       res.status(400).render("errorPage",{
         title: "Error",
@@ -307,7 +318,7 @@ router
         });
         return;
       }
-      let cancel = await events.cancelEvent(req.session.user, req.params.id);
+      let cancel = await events.cancelEvent(req.params.id, req.session.user);
       let answer = await events.getEventById(req.params.id);
       if(cancel.success == true){
         //res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
@@ -344,7 +355,7 @@ router
         });
         return;
       }
-      let uncancel = await events.uncancelEvent(req.session.user, req.params.id);
+      let uncancel = await events.uncancelEvent(req.params.id, req.session.user);
       let answer = await events.getEventById(req.params.id);
       if(uncancel.success == true){
         let allCreated = await events.getEventsCreatedBy(req.session.user);
