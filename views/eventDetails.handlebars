@@ -4,8 +4,8 @@
 <p id="desc">{{info.eventinfo.description}}</p>
 <p>from {{info.eventinfo.startTime}} to {{info.endTime}}</p>
 <p>Hosted at {{info.eventinfo.location}}</p>
-<p>Capacity: {{info.eventinfo.usersRegistered.length}}/{{info.capacity}}</p>
-{{#if owner}} <p>Currently registered: {{info.usersRegistered}}</p> {{/if}}
+<p>Capacity: {{info.eventinfo.usersRegistered.length}}/{{info.eventinfo.capacity}}</p>
+{{#if info.owner}} <p>Currently registered: {{info.eventinfo.usersRegistered}}</p> {{/if}}
 {{#each info.eventinfo.tags}}<p class="tag">#{{this}} </p>{{/each}}
 {{#if info.eventinfo.cancelled}}<p class="error">CANCELLED</p>{{/if}}
 
