@@ -56,6 +56,9 @@ router
       }
       let eventInfo = await events.getEventById(req.params.id);
 
+      eventInfo.fmtStartTime = (new Date(eventInfo.startTime.getTime() - eventInfo.startTime.getTimezoneOffset() * 60000).toISOString()).slice(0, -1);
+      eventInfo.fmtEndTime = (new Date(eventInfo.endTime.getTime() - eventInfo.endTime.getTimezoneOffset() * 60000).toISOString()).slice(0, -1);
+
       let info = {
         title: "Event Details",
         loggedIn: true,

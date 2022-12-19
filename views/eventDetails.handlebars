@@ -1,4 +1,5 @@
 <h1>{{info.eventName}}</h1>
+<img src="data:{{info.image.mimetype}};base64,{{info.image.data}}" alt="event image" class="bigImg">
 <h3>Posted by {{info.postedBy}} from {{info.college}}</h3>
 <p id="desc">{{info.description}}</p>
 <p>from {{info.startTime}} to {{info.endTime}}</p>
@@ -22,22 +23,25 @@
 </form>
 {{/if}}
 
-<form method="POST" action="/created/{{info._id}}" id="editevent-form" encType="multipart/form-data">
-    <label for="eventName">Event name:</label>
-    <input type="text" id="editeventName" name="eventName"><br>
-    <label for="location">Location:</label>
-    <input type="text" id="editlocation" name="location"><br>
-    <label for="startTime">Start time:</label>
-    <input type="datetime-local" id="editstartTime" name="startTime"><br>
-    <label for="endTime">End time:</label>
-    <input type="datetime-local" id="editendTime" name="endTime"><br>
-    <label for="description">Description:</label>
-    <input type="text" id="editdescription" name="description"><br>
-    <label for="capacity">Capacity:</label>
-    <input type="number" min="1" id="editcapacity" name="capacity"><br>
-    <label for="tags">Tags:</label>
-    <input type="text" id="edittags" name="tags"><br>
-    <label for="image">Upload image here:</label>
+
+<form method="POST" action="/edit/{{info._id}}" id="editevent-form" encType="multipart/form-data">
+    <label for="editeventName">Event name:</label>
+    <input type="text" id="editeventName" value="{{info.eventName}}" name="eventName"><br>
+    <label for="editlocation">Location:</label>
+    <input type="text" id="editlocation" name="location" value="{{info.location}}"><br>
+    <label for="editstartTime">Start time:</label>
+    <input type="datetime-local" id="editstartTime" name="startTime" value="{{info.fmtStartTime}}"><br>
+    <label for="editendTime">End time:</label>
+    <input type="datetime-local" id="editendTime" name="endTime" value="{{info.fmtEndTime}}"><br>
+    <label for="editdescription">Description:</label>
+    <input type="text" id="editdescription" name="description" value="{{info.description}}"><br>
+    <label for="editcapacity">Capacity:</label>
+    <input type="number" min="1" id="editcapacity" name="capacity" value="{{info.capacity}}"><br>
+    <label for="edittags">Tags:</label>
+    <input type="text" id="edittags" name="tags" value="{{info.tags}}"><br>
+    <label for="editimage">Upload image here:</label>
+
+
     <input type="file" id="editimage" name="image"><br>
     <button type="submit" class="submitbutton">Submit</button>
 </form>
@@ -65,8 +69,9 @@
 
 
 
+
 <form method="POST" action="/comments/{{info._id}}" id="makecomment-form">
-    <label for="comment">Comment:</label>
+    <label for="comment">Comment:</label><br>
     <input type="text" id="comment" name="comment">
     <button type="submit">submit</button>
 </form>
@@ -74,7 +79,7 @@
 <div id="allComments">
     {{#each info.comments}} 
         <div class="comment">
-            <h2>{{userName}} commented on {{commentDate}}:</h2>
+            <h3>{{userName}} commented on {{commentDate}}:</h3>
             <p>{{body}}</p>
         </div>
     {{/each}}
