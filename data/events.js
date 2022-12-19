@@ -178,6 +178,8 @@ const getEventById = async (id) => {
 	const event = await event_collection_c.findOne({ _id: ObjectId(id) });
 	if (!event) throw "No event with that id";
 
+	event.image.data = event.image.data.toString('base64');
+
 	event._id = event._id.toString();
 
 	return event;
@@ -474,7 +476,6 @@ const getFavorites = async (username) => {
 			obj = obj.toString();
 
 			let event = await getEventById(obj);
-			event.image.data = event.image.data.toString('base64');
 
 			return event;
 		  }));
@@ -508,7 +509,6 @@ const getRegistered = async (username) => {
 			obj = obj.toString();
 
 			let event = await getEventById(obj);
-			event.image.data = event.image.data.toString('base64');
 
 			return event;
 		  }));
