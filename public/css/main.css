@@ -108,7 +108,32 @@ button {
     margin:15px;
     display:inline;
 }
+#register-btn input {
+    font-size:16pt;
+    background-color:#222222;
+    color: #DCDCDC;
+}
 #favorite-btn {
     margin:15px;
     display:inline;
+}
+#favorite-btn input {
+    margin-top: 10px;
+    margin-bottom:10px;
+    font-size:16pt;
+    background-color:#222222;
+    color: #DCDCDC;
+}
+#cancel-btn {
+    margin:15px;
+    display:inline;
+}
+#cancel-btn input {
+    font-size:16pt;
+    background-color:#222222;
+    color: #DCDCDC;
+}
+#comment {
+    padding-right: 200px;
+    padding-bottom:100px;
 }

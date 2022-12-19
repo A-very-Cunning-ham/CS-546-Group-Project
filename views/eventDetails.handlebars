@@ -14,19 +14,19 @@
 
 <form method="POST" action="/edit/{{info._id}}" id="editevent-form" encType="multipart/form-data">
     <label for="eventName">Event name:</label>
-    <input type="text" id="editeventName" name="eventName"><br>
+    <input type="text" id="editeventName" value={{info.eventName}} name="eventName"><br>
     <label for="location">Location:</label>
-    <input type="text" id="editlocation" name="location"><br>
+    <input type="text" id="editlocation" name="location" value={{info.location}}><br>
     <label for="startTime">Start time:</label>
-    <input type="datetime-local" id="editstartTime" name="startTime"><br>
+    <input type="datetime-local" id="editstartTime" name="startTime" value={{info.startTime}}><br>
     <label for="endTime">End time:</label>
-    <input type="datetime-local" id="editendTime" name="endTime"><br>
+    <input type="datetime-local" id="editendTime" name="endTime" value={{info.endTime}}><br>
     <label for="description">Description:</label>
-    <input type="text" id="editdescription" name="description"><br>
+    <input type="text" id="editdescription" name="description" value={{info.description}}><br>
     <label for="capacity">Capacity:</label>
-    <input type="number" min="1" id="editcapacity" name="capacity"><br>
+    <input type="number" min="1" id="editcapacity" name="capacity" value={{info.capacity}}><br>
     <label for="tags">Tags:</label>
-    <input type="text" id="edittags" name="tags"><br>
+    <input type="text" id="edittags" name="tags" value={{info.tags}}><br>
     <label for="image">Upload image here:</label>
     <input type="file" id="editimage" name="image"><br>
     <button type="submit" class="submitbutton">Submit</button>
@@ -39,9 +39,14 @@
 <form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
     <input type="submit" value="Add Event To Favorites">
 </form>
+{{#if owner}}
+<form method="POST" action="/events/cancel/{{info._id}}" id="cancel-btn">
+    <input type="submit" value="Cancel Event">
+</form>
+{{/if}}
 
 <form method="POST" action="/comments/{{info._id}}" id="makecomment-form">
-    <label for="comment">Comment:</label>
+    <label for="comment">Comment:</label><br>
     <input type="text" id="comment" name="comment">
     <button type="submit">submit</button>
 </form>
@@ -49,7 +54,7 @@
 <div id="allComments">
     {{#each info.comments}} 
         <div class="comment">
-            <h2>{{userName}} commented on {{commentDate}}:</h2>
+            <h3>{{userName}} commented on {{commentDate}}:</h3>
             <p>{{body}}</p>
         </div>
     {{/each}}
