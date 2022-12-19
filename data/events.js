@@ -26,6 +26,7 @@ const createEvent = async (
 	helpers.errorIfNotProperString(location, "location");
 	helpers.errorIfNotProperDateTime(startTime);
 	helpers.errorIfNotProperDateTime(endTime);
+
 	if (Date.parse(startTime) >= Date.parse(endTime)) {
 		throw `StartTime can't come after endTime`;
 	}
@@ -93,6 +94,77 @@ const createEvent = async (
 	}
 };
 
+const editEvent = async (
+	eventID,
+	eventName,
+	location,
+	startTime,
+	endTime,
+	tags,
+	description,
+	capacity,
+	imageData
+) => {
+	const event_collection_c = await event_collection();
+
+	helpers.errorIfNotProperID(eventID, "Event ID");
+	helpers.errorIfNotProperString(eventName, "eventName");
+	helpers.errorIfNotProperString(location, "location");
+	helpers.errorIfNotProperDateTime(startTime);
+	helpers.errorIfNotProperDateTime(endTime);
+	if (Date.parse(startTime) >= Date.parse(endTime)) {
+		throw `StartTime can't come after endTime`;
+	}
+
+
+	if (tags) {
+		for (let i=0;i<tags.length;i++){
+			tags[i] = tags[i].trim();
+			helpers.errorIfNotProperString(tags[i], "tag " +(i+1));
+		  }
+		// TODO: trim whitespace
+	}
+	helpers.errorIfNotProperString(description, "description");
+
+	helpers.errorIfStringIsNotNumber(capacity);
+	capacity = parseFloat(capacity);
+
+	if (capacity < 1 || capacity % 1 > 0) {
+		throw `Invalid Capacity provided`;
+	}
+
+	let updateEvent = {
+		eventName: eventName,
+		location: location,
+		startTime: new Date(startTime),
+		endTime: new Date(endTime),
+		tags: tags,
+		description: description,
+		capacity: capacity,
+	};
+
+	if(imageData){
+		// only update the image if a new one is included
+		if (imageData.size > 1024 * 1024 * maxImageSizeMB) {
+			throw `Image size must be below ${maxImageSizeMB} MB`;
+		}
+	
+		if (!imageData.mimetype.includes("image")) {
+			throw `File must be an image`;
+		}
+		updateEvent.image = imageData;
+	}
+
+	const updateInfo = await event_collection_c.updateOne({_id: ObjectId(eventID)}, {updateEvent});
+
+
+	if (updateInfo.insertedCount === 0) {
+		throw "Unable to update event with that ID";
+	} else {
+		return { success: true };
+	}
+};
+
 const getEventById = async (id) => {
 	if (!id) throw "You must provide an ID to search for";
 	if (typeof id !== "string") throw "ID must be a string";
@@ -120,11 +192,11 @@ const getUpcomingEvents = async (college) => {
 		var events = await event_collection_c.find({
 			college: college,
 			startTime: { $gte: new Date() },
-		}).toArray();
+		}).sort({ startTime : 1 }).toArray();
 	}else{
 		var events = await event_collection_c.find({
 			startTime: { $gte: new Date() },
-		}).toArray();
+		}).sort({ startTime : 1 }).toArray();
 
 	}
 
@@ -491,6 +563,7 @@ module.exports = {
 	getRegistered,
 	getEventsCreatedBy,
 	searchUpcomingEvents,
+	editEvent,
 	cancelEvent,
 	uncancelEvent,
 	favoriteEvent,
