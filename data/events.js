@@ -38,8 +38,10 @@ const createEvent = async (
 	if (!user) throw `No user present with userName: ${postedBy}`;
 
 	if (tags) {
-		helpers.errorIfNotProperString(tags, "Tags");
-		tags = tags.split(",");
+		for (let i=0;i<tags.length;i++){
+			tags[i] = tags[i].trim();
+			helpers.errorIfNotProperString(tags[i], "tag " +(i+1));
+		  }
 		// TODO: trim whitespace
 	}
 	helpers.errorIfNotProperString(description, "description");
@@ -80,6 +82,7 @@ const createEvent = async (
 		image: imageData,
 		college: college,
 		comments: [],
+		cancelled: false
 	};
 
 	const insertInfo = await event_collection_c.insertOne(new_event);
@@ -253,6 +256,61 @@ const deleteEvent = async (id) => {
 
 };
 
+const cancelEvent = async (id, username) => {
+	if (!id) throw "You must provide an ID to search for";
+	if (typeof id !== "string") throw "ID must be a string";
+	if (id.trim().length === 0)
+		throw "ID cannot be an empty string or just spaces";
+	id = id.trim();
+	if (!ObjectId.isValid(id)) throw "invalid object ID";
+
+	const event_collection_c = await event_collection();
+	const event = await getEventById(id);
+
+	if(event.postedBy != username){
+		throw "You're not authorized to modify that event"
+	}
+
+	if(event.cancelled == true){
+		throw "Event already cancelled";
+	}
+	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {cancelled: true});
+
+	if (cancelInfo.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { success: true };
+	}
+};
+
+const uncancelEvent = async (id, username) => {
+	if (!id) throw "You must provide an ID to search for";
+	if (typeof id !== "string") throw "ID must be a string";
+	if (id.trim().length === 0)
+		throw "ID cannot be an empty string or just spaces";
+	id = id.trim();
+	if (!ObjectId.isValid(id)) throw "invalid object ID";
+
+	const event_collection_c = await event_collection();
+	const event = await getEventById(id);
+
+	if(event.postedBy != username){
+		throw "You're not authorized to modify that event"
+	}
+
+	if(event.cancelled == false){
+		throw "Event isn't cancelled, can't uncancel";
+	}
+
+	const cancelInfo = await event_collection_c.updateOne({_id: ObjectId(id)}, {cancelled: false});
+
+	if (cancelInfo.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { success: true };
+	}
+};
+
 const registerForEvent = async (username, eventID) => {
 	//TODO: check for conflicting events
 	helpers.errorIfNotProperUserName(username);
@@ -285,7 +343,6 @@ const registerForEvent = async (username, eventID) => {
 			console.log("Capacity reached")
 			throw "Event capacity already reached, can't register";
 		}
-		console.log("no errors")
 
 	// TODO: maybe use a transaction here to ensure collections stay in sync
 	let eventUpdated = await event_collection_c.updateOne(
@@ -306,7 +363,69 @@ const registerForEvent = async (username, eventID) => {
 	}
 }
 
-const favoritedEventsSwitch = async (username, eventID) => {
+const unregisterForEvent = async (username, eventID) => {
+	//TODO: check for conflicting events
+	helpers.errorIfNotProperUserName(username);
+	username = username.trim().toLowerCase();
+	const event_collection_c = await event_collection();
+	const user_collection_c = await user_collection();
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+
+	// TODO: maybe use a transaction here to ensure collections stay in sync
+	let eventUpdated = await event_collection_c.updateOne(
+		{ _id: ObjectId(eventID) },
+		{$pull: { usersRegistered: username } ,
+		 $inc: { numUserRegistered: -1}}
+	);
+
+	let userUpdated = await user_collection_c.updateOne(
+		{ username: username },
+		{$pull: { eventsRegistered: eventID }}
+	);
+
+	if (eventUpdated.acknowledged == false || userUpdated.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { userInserted: true };
+	}
+}
+
+const favoriteEvent = async (username, eventID) => {
+	helpers.errorIfNotProperUserName(username);
+	const event_collection_c = await event_collection();
+	const user_collection_c = await user_collection();
+	helpers.errorIfNotProperID(eventID, 'eventID');
+	eventID = eventID.trim();
+	let event = await event_collection_c.findOne({ _id: ObjectId(eventID) });
+	if (!event) throw `No Event present with id: ${eventID}`;
+	username = username.toLowerCase().trim();
+
+	let user = await user_collection_c.findOne({username: username});
+	if (!user) throw "Could not find user";
+
+	let res = "";
+	console.log(user.favoriteEvents);
+
+	if (user.favoriteEvents.includes(eventID)){
+		throw "You already favorited that event";
+	} else{
+		res = await user_collection_c.updateOne(
+			{ username: username },
+			{ $push: { favoriteEvents: eventID } }
+		);
+	}
+
+	if (res.acknowledged == false) {
+		throw `Server Error`;
+	} else {
+		return { success: true };
+	}
+}
+
+const unfavoriteEvent = async (username, eventID) => {
 	helpers.errorIfNotProperUserName(username);
 	const event_collection_c = await event_collection();
 	const user_collection_c = await user_collection();
@@ -318,24 +437,21 @@ const favoritedEventsSwitch = async (username, eventID) => {
 	let user = await user_collection_c.findOne({username: username});
 	if (!user) throw "Could not find user";
 
-	let res = "";
+	let res;
 
-	if (user.favoritedEvents.includes(eventID)){
+	if (user.favoriteEvents.includes(eventID)){
 		res = await user_collection_c.updateOne(
 			{ username: username },
-			{ $pull: { favoritedEvents: eventID } }
+			{ $pull: { favoriteEvents: eventID } }
 		);
 	} else{
-		res = await user_collection_c.updateOne(
-			{ username: username },
-			{ $push: { favoritedEvents: eventID } }
-		);
+		throw "You already have that unfavorited";
 	}
 
 	if (res.acknowledged == false) {
 		throw `Server Error`;
 	} else {
-		return { favoritedEventSwitched: true };
+		return { success: true };
 	}
 }
 
@@ -441,11 +557,15 @@ module.exports = {
 	getEventById, 
 	getUpcomingEvents,
 	registerForEvent,
-	favoritedEventsSwitch,
+	unregisterForEvent,
 	deleteEvent,
 	getFavorites,
 	getRegistered,
 	getEventsCreatedBy,
 	searchUpcomingEvents,
-	editEvent
+	editEvent,
+	cancelEvent,
+	uncancelEvent,
+	favoriteEvent,
+	unfavoriteEvent
 };
