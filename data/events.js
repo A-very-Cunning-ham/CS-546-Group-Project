@@ -445,5 +445,6 @@ module.exports = {
 	getFavorites,
 	getRegistered,
 	getEventsCreatedBy,
-	searchUpcomingEvents
+	searchUpcomingEvents,
+	editEvent
 };
