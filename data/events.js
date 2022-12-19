@@ -26,6 +26,7 @@ const createEvent = async (
 	helpers.errorIfNotProperString(location, "location");
 	helpers.errorIfNotProperDateTime(startTime);
 	helpers.errorIfNotProperDateTime(endTime);
+
 	if (Date.parse(startTime) >= Date.parse(endTime)) {
 		throw `StartTime can't come after endTime`;
 	}
@@ -188,11 +189,11 @@ const getUpcomingEvents = async (college) => {
 		var events = await event_collection_c.find({
 			college: college,
 			startTime: { $gte: new Date() },
-		}).toArray();
+		}).sort({ startTime : 1 }).toArray();
 	}else{
 		var events = await event_collection_c.find({
 			startTime: { $gte: new Date() },
-		}).toArray();
+		}).sort({ startTime : 1 }).toArray();
 
 	}
 
