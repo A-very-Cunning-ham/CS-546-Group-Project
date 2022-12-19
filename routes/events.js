@@ -67,7 +67,7 @@ router
         owner: false,
         registered: false,
         favorited: false,
-        info: eventInfo
+        eventinfo: eventInfo
       }
 
       if(req.session.user == eventInfo.postedBy){
@@ -85,7 +85,11 @@ router
       }
 
 
-      res.render("eventDetails", info);
+      res.render("eventDetails", {
+        info: info,
+        loggedIn: true,
+        username: req.session.user
+      });
         
     }catch(e){
       res.status(400).render("errorPage",{
