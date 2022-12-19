@@ -22,7 +22,7 @@ body {
     text-decoration: none;
 }
 .headnav a:hover {
-    font-weight:bold;   
+    text-decoration: underline;   
 }
 
 h1 {
