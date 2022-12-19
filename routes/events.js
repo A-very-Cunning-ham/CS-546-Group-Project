@@ -106,7 +106,7 @@ router
       }
       let register = await events.registerForEvent(req.session.user, req.params.id);
       if (register.userInserted==true){
-        res.redirect("/" + req.params.id);
+        res.redirect("/events/" + req.params.id);
       }else{
         throw "Was not able to register for event";
       }
@@ -155,7 +155,7 @@ router
       }
       let unregister = await events.unregisterForEvent(req.session.user, req.params.id);
       if(unregister.userInserted == true){
-        res.redirect("/" + req.params.id);
+        res.redirect("/events/" + req.params.id);
       }else{
         throw "Was not able to unregister for event";
       }
@@ -182,7 +182,7 @@ router
       }
       let favorited = await events.favoriteEvent(req.session.user, req.params.id);
       if(favorited.success == true){
-        res.redirect("/" + req.params.id);
+        res.redirect("/events/" + req.params.id);
       }
       else{
         throw "Was not able to favorite event";
@@ -210,7 +210,7 @@ router
       }
       let unfavorited = await events.unfavoriteEvent(req.session.user, req.params.id);
       if(unfavorited.success == true){
-        res.redirect("/" + req.params.id);
+        res.redirect("/events/" + req.params.id);
       }else{
         throw "Was not able to unregister for event";
       }
@@ -239,7 +239,7 @@ router
       let cancel = await events.cancelEvent(req.params.id, req.session.user);
 
       if(cancel.success == true){
-        res.redirect("/" + req.params.id);
+        res.redirect("/events/" + req.params.id);
       }
       else{
         throw "Was not able to cancel event";
@@ -269,7 +269,7 @@ router
       let uncancel = await events.uncancelEvent(req.params.id, req.session.user);
 
       if(uncancel.success == true){
-        res.redirect("/" + req.params.id);
+        res.redirect("/events/" + req.params.id);
       }
       else{
         throw "Was not able to uncancel event";

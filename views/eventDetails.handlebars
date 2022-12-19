@@ -14,11 +14,11 @@
 
 {{#if info.cancelled}}
 <form method="POST" action="/events/uncancel/{{info._id}}" id="cancel-btn">
-    <input type="submit" value="Uncancel For This Event For All Users">
+    <input type="submit" value="Uncancel This Event For All Users">
 </form>
 {{else}}
 <form method="POST" action="/events/cancel/{{info._id}}" id="cancel-btn">
-    <input type="submit" value="Cancel For This Event For All Users">
+    <input type="submit" value="Cancel This Event For All Users">
 </form>
 {{/if}}
 
