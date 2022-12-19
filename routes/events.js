@@ -239,14 +239,18 @@ router
         });
         return;
       }
+      let event = events.getEventById(req.params.id);
+      if(req.session.user == event.postedBy){
+        let cancel = await events.cancelEvent(req.params.id, req.session.user);
 
-      let cancel = await events.cancelEvent(req.params.id, req.session.user);
-
-      if(cancel.success == true){
-        res.redirect("/events/" + req.params.id);
-      }
-      else{
-        throw "Was not able to cancel event";
+        if(cancel.success == true){
+          res.redirect("/events/" + req.params.id);
+        }
+        else{
+          throw "Was not able to cancel event";
+        }
+      }else{
+        throw "Not your event to cancel"
       }
     }catch(e){
       res.status(400).render("errorPage",{
@@ -270,13 +274,18 @@ router
         return;
       }
 
-      let uncancel = await events.uncancelEvent(req.params.id, req.session.user);
+      let event = events.getEventById(req.params.id);
+      if(req.session.user == event.postedBy){
+        let uncancel = await events.uncancelEvent(req.params.id, req.session.user);
 
-      if(uncancel.success == true){
-        res.redirect("/events/" + req.params.id);
-      }
-      else{
-        throw "Was not able to uncancel event";
+        if(uncancel.success == true){
+          res.redirect("/events/" + req.params.id);
+        }
+        else{
+          throw "Was not able to uncancel event";
+        }
+      }else{
+        throw "Not your event to ucancel";
       }
     }catch(e){
       res.status(400).render("errorPage",{
