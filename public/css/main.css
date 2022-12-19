@@ -120,3 +120,10 @@ button {
     padding-right: 200px;
     padding-bottom:100px;
 }
+
+.bigImg {
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    width:25%;
+}
