@@ -46,24 +46,27 @@
     {{/if}}
 {{/if}}
 
+
 {{#if registered}}
 <form method="POST" action="/events/unregister/{{info._id}}" class="details-btn">
     <input type="submit" value="Unregister For This Event">
 </form>
 {{else}}
-<form method="POST" action="/events/register/{{info._id}}" class="details-btn">
+{{#unless info.cancelled}}<form method="POST" action="/events/register/{{info._id}}" class="details-btn">
     <input type="submit" value="Register For This Event">
-</form>
+</form>{{/unless}}
 {{/if}}
+
+
 
 {{#if favorited}}
 <form method="POST" action="/events/unfavorite/{{info._id}}" class="details-btn">
     <input type="submit" value="Remove From Favorites">
 </form>
 {{else}}
-<form method="POST" action="/events/favorite/{{info._id}}" class="details-btn">
+{{#unless info.cancelled}}<form method="POST" action="/events/favorite/{{info._id}}" class="details-btn">
     <input type="submit" value="Add Event To Favorites">
-</form>
+</form>{{/unless}}
 {{/if}}
 
 
