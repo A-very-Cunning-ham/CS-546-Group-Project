@@ -13,21 +13,21 @@
 <div class="error" id="error0" hidden>Im an error</div>
 
 <form method="POST" action="/edit/{{info._id}}" id="editevent-form" encType="multipart/form-data">
-    <label for="eventName">Event name:</label>
+    <label for="editeventName">Event name:</label>
     <input type="text" id="editeventName" value="{{info.eventName}}" name="eventName"><br>
-    <label for="location">Location:</label>
+    <label for="editlocation">Location:</label>
     <input type="text" id="editlocation" name="location" value="{{info.location}}"><br>
-    <label for="startTime">Start time:</label>
+    <label for="editstartTime">Start time:</label>
     <input type="datetime-local" id="editstartTime" name="startTime" value="{{info.fmtStartTime}}"><br>
-    <label for="endTime">End time:</label>
+    <label for="editendTime">End time:</label>
     <input type="datetime-local" id="editendTime" name="endTime" value="{{info.fmtEndTime}}"><br>
-    <label for="description">Description:</label>
+    <label for="editdescription">Description:</label>
     <input type="text" id="editdescription" name="description" value="{{info.description}}"><br>
-    <label for="capacity">Capacity:</label>
+    <label for="editcapacity">Capacity:</label>
     <input type="number" min="1" id="editcapacity" name="capacity" value="{{info.capacity}}"><br>
-    <label for="tags">Tags:</label>
+    <label for="edittags">Tags:</label>
     <input type="text" id="edittags" name="tags" value="{{info.tags}}"><br>
-    <label for="image">Upload image here:</label>
+    <label for="editimage">Upload image here:</label>
     <input type="file" id="editimage" name="image"><br>
     <button type="submit" class="submitbutton">Submit</button>
 </form>

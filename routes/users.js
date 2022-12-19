@@ -22,6 +22,7 @@ router
         const upcomingEvents = await events.getUpcomingEvents(userData.college);
         // console.log(upcomingEvents);
         res.render("homepage", {
+          title: "Homepage",
           loggedIn: true,
           username: req.session.user,
           college: userData.college,
