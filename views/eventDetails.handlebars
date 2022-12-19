@@ -1,44 +1,44 @@
-<h1>{{info.eventName}}</h1>
-<img src="data:{{info.image.mimetype}};base64,{{info.image.data}}" alt="event image" class="bigImg">
-<h3>Posted by {{info.postedBy}} from {{info.college}}</h3>
-<p id="desc">{{info.description}}</p>
-<p>from {{info.startTime}} to {{info.endTime}}</p>
-<p>Hosted at {{info.location}}</p>
-<p>Capacity: {{info.usersRegistered.length}}/{{info.capacity}}</p>
-{{#if owner}} <p>Currently registered: {{info.usersRegistered}}</p> {{/if}}
-{{#each info.tags}}<p class="tag">#{{this}} </p>{{/each}}
+<h1>{{info.eventinfo.eventName}}</h1>
+<img src="data:{{info.eventinfo.image.mimetype}};base64,{{info.eventinfo.image.data}}" alt="event image" class="bigImg">
+<h3>Posted by {{info.eventinfo.postedBy}} from {{info.eventinfo.college}}</h3>
+<p id="desc">{{info.eventinfo.description}}</p>
+<p>from {{info.eventinfo.startTime}} to {{info.eventinfo.endTime}}</p>
+<p>Hosted at {{info.eventinfo.location}}</p>
+<p>Capacity: {{info.eventinfo.usersRegistered.length}}/{{info.eventinfo.capacity}}</p>
+{{#if owner}} <p>Currently registered: {{info.eventinfo.usersRegistered}}</p> {{/if}}
+{{#each info.eventinfo.tags}}<p class="tag">#{{this}} </p>{{/each}}
 
-{{#if owner}}
+{{#if info.owner}}
 <h2 class="header2">Edit Event:</h2>
 
 <div class="error" id="error0" hidden>Im an error</div>
 
-{{#if info.cancelled}}
-<form method="POST" action="/events/uncancel/{{info._id}}" id="cancel-btn">
+{{#if info.eventinfo.cancelled}}
+<form method="POST" action="/events/uncancel/{{info.eventinfo._id}}" id="cancel-btn">
     <input type="submit" value="Uncancel This Event For All Users">
 </form>
 {{else}}
-<form method="POST" action="/events/cancel/{{info._id}}" id="cancel-btn">
+<form method="POST" action="/events/cancel/{{info.eventinfo._id}}" id="cancel-btn">
     <input type="submit" value="Cancel This Event For All Users">
 </form>
 {{/if}}
 
 
-<form method="POST" action="/events/edit/{{info._id}}" id="editevent-form" encType="multipart/form-data">
+<form method="POST" action="/events/edit/{{info.eventinfo._id}}" id="editevent-form" encType="multipart/form-data">
     <label for="editeventName">Event name:</label>
-    <input type="text" id="editeventName" value="{{info.eventName}}" name="eventName"><br>
+    <input type="text" id="editeventName" value="{{info.eventinfo.eventName}}" name="eventName"><br>
     <label for="editlocation">Location:</label>
-    <input type="text" id="editlocation" name="location" value="{{info.location}}"><br>
+    <input type="text" id="editlocation" name="location" value="{{info.eventinfo.location}}"><br>
     <label for="editstartTime">Start time:</label>
-    <input type="datetime-local" id="editstartTime" name="startTime" value="{{info.fmtStartTime}}"><br>
+    <input type="datetime-local" id="editstartTime" name="startTime" value="{{info.eventinfo.fmtStartTime}}"><br>
     <label for="editendTime">End time:</label>
-    <input type="datetime-local" id="editendTime" name="endTime" value="{{info.fmtEndTime}}"><br>
+    <input type="datetime-local" id="editendTime" name="endTime" value="{{info.eventinfo.fmtEndTime}}"><br>
     <label for="editdescription">Description:</label>
-    <input type="text" id="editdescription" name="description" value="{{info.description}}"><br>
+    <input type="text" id="editdescription" name="description" value="{{info.eventinfo.description}}"><br>
     <label for="editcapacity">Capacity:</label>
-    <input type="number" min="1" id="editcapacity" name="capacity" value="{{info.capacity}}"><br>
+    <input type="number" min="1" id="editcapacity" name="capacity" value="{{info.eventinfo.capacity}}"><br>
     <label for="edittags">Tags:</label>
-    <input type="text" id="edittags" name="tags" value="{{info.tags}}"><br>
+    <input type="text" id="edittags" name="tags" value="{{info.eventinfo.tags}}"><br>
     <label for="editimage">Upload image here: (optional)</label>
 
 
@@ -47,22 +47,22 @@
 </form>
 {{/if}}
 
-{{#if registered}}
-<form method="POST" action="/events/unregister/{{info._id}}" id="register-btn">
+{{#if info.registered}}
+<form method="POST" action="/events/unregister/{{info.eventinfo._id}}" id="register-btn">
     <input type="submit" value="Unregister For This Event">
 </form>
 {{else}}
-<form method="POST" action="/events/register/{{info._id}}" id="register-btn">
+<form method="POST" action="/events/register/{{info.eventinfo._id}}" id="register-btn">
     <input type="submit" value="Register For This Event">
 </form>
 {{/if}}
 
-{{#if favorited}}
-<form method="POST" action="/events/unfavorite/{{info._id}}" id="favorite-btn">
+{{#if info.favorited}}
+<form method="POST" action="/events/unfavorite/{{info.eventinfo._id}}" id="favorite-btn">
     <input type="submit" value="Remove From Favorites">
 </form>
 {{else}}
-<form method="POST" action="/events/favorite/{{info._id}}" id="favorite-btn">
+<form method="POST" action="/events/favorite/{{info.eventinfo._id}}" id="favorite-btn">
     <input type="submit" value="Add Event To Favorites">
 </form>
 {{/if}}
@@ -70,14 +70,14 @@
 
 
 
-<form method="POST" action="/comments/{{info._id}}" id="makecomment-form">
+<form method="POST" action="/comments/{{info.eventinfo._id}}" id="makecomment-form">
     <label for="comment">Comment:</label><br>
     <input type="text" id="comment" name="comment">
     <button type="submit">submit</button>
 </form>
 
 <div id="allComments">
-    {{#each info.comments}} 
+    {{#each info.eventinfo.comments}} 
         <div class="comment">
             <h3>{{userName}} commented on {{commentDate}}:</h3>
             <p>{{body}}</p>
