@@ -181,25 +181,30 @@ router
 
       //rest of error checking all input
 
-      
-    let event = await events.editEvent(
-      req.params.id,
-      xss(createData.eventName), 
-      xss(createData.location), 
-      xss(createData.startTime), 
-      xss(createData.endTime), 
-      xss(createData.tags), 
-      xss(createData.description), 
-      xss(createData.capacity), 
-      image);
-
-    if(event.success){
-      res.redirect("/events/" + req.params.id);
-    }
-    else{
-        res.status(500).render("errorPage", {
-          error: "Internal Server Error. Try Again"
-        });
+      let eventData = events.getEventById(req.params.id);
+      if(req.session.user == eventData.postedBy){
+        let event = await events.editEvent(
+          req.params.id,
+          xss(createData.eventName), 
+          xss(createData.location), 
+          xss(createData.startTime), 
+          xss(createData.endTime), 
+          xss(createData.tags), 
+          xss(createData.description), 
+          xss(createData.capacity), 
+          image);
+    
+        if(event.success){
+          res.redirect("/events/" + req.params.id);
+        }
+        else{
+            res.status(500).render("errorPage", {
+              error: "Internal Server Error. Try Again"
+            });
+          }
+      }
+      else{
+        throw "Must own event to edit it";
       }
 
   }catch(e){
