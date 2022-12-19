@@ -186,7 +186,6 @@ router
       //rest of error checking all input
 
       let eventData = events.getEventById(req.params.id);
-      if(req.session.user == eventData.postedBy){
         let event = await events.editEvent(
           req.params.id,
           xss(createData.eventName), 
@@ -206,10 +205,6 @@ router
               error: "Internal Server Error. Try Again"
             });
           }
-      }
-      else{
-        throw "Must own event to edit it";
-      }
 
   }catch(e){
       res.status(400).render("errorPage", {
@@ -317,7 +312,6 @@ router
         return;
       }
       let event = events.getEventById(req.params.id);
-      if(req.session.user == event.postedBy){
         let cancel = await events.cancelEvent(req.params.id, req.session.user);
 
         if(cancel.success == true){
@@ -326,9 +320,6 @@ router
         else{
           throw "Was not able to cancel event";
         }
-      }else{
-        throw "Not your event to cancel"
-      }
     }catch(e){
       res.status(400).render("errorPage",{
         title: "Error",
@@ -352,7 +343,6 @@ router
       }
 
       let event = events.getEventById(req.params.id);
-      if(req.session.user == event.postedBy){
         let uncancel = await events.uncancelEvent(req.params.id, req.session.user);
 
         if(uncancel.success == true){
@@ -361,9 +351,6 @@ router
         else{
           throw "Was not able to uncancel event";
         }
-      }else{
-        throw "Not your event to ucancel";
-      }
     }catch(e){
       res.status(400).render("errorPage",{
         title: "Error",
