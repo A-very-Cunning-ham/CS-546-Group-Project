@@ -7,6 +7,7 @@
 <p>Capacity: {{info.usersRegistered.length}}/{{info.capacity}}</p>
 {{#if owner}} <p>Currently registered: {{info.usersRegistered}}</p> {{/if}}
 {{#each info.tags}}<p class="tag">#{{this}} </p>{{/each}}
+{{#if cancelled}}<p class="error">CANCELLED</p>{{/if}}
 
 {{#if owner}}
 <h2 class="header2">Edit Event:</h2>
