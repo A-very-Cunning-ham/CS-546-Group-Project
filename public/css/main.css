@@ -60,7 +60,7 @@ h2 {
 }
 .tag {
     display:inline;
-    color:cornflowerblue;
+    color:#548ce8;
 }
 p {
     color:#222222;
@@ -81,12 +81,13 @@ button {
 }
 #searchform {
     display:inline;
-    margin: 30px;
+    margin:5px;
 }
 #searchinput {
     border:2px #555555;
     padding:4px;
     font-size:14pt;
+    width:150px;
     font-family:'Times New Roman', Times, serif;
 }
 .comment {
@@ -104,36 +105,40 @@ button {
     margin: 10px;
     border-left: 2pt solid #222222 
 }
-#register-btn {
+.details-btn {
     margin:15px;
     display:inline;
 }
-#register-btn input {
-    font-size:16pt;
-    background-color:#222222;
-    color: #DCDCDC;
-}
-#favorite-btn {
-    margin:15px;
-    display:inline;
-}
-#favorite-btn input {
+.details-btn input {
     margin-top: 10px;
     margin-bottom:10px;
     font-size:16pt;
     background-color:#222222;
     color: #DCDCDC;
 }
-#cancel-btn {
-    margin:15px;
-    display:inline;
-}
-#cancel-btn input {
-    font-size:16pt;
-    background-color:#222222;
-    color: #DCDCDC;
-}
+
 #comment {
     padding-right: 200px;
     padding-bottom:100px;
+}
+
+.bigImg {
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    width:25%;
+}
+
+.header2 {
+    border-top:solid 2px #222222;
+    margin-left:10px;
+}
+
+#makecomment-form {
+    border-top: solid 2px #222222;
+}
+.submitbutton {
+    margin:10px;
+    background-color: #222222;
+    color:#DCDCDC;
 }
