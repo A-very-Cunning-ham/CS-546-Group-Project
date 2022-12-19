@@ -130,5 +130,15 @@ button {
 }
 
 .header2 {
+    border-top:solid 2px #222222;
     margin-left:10px;
+}
+
+#makecomment-form {
+    border-top: solid 2px #222222;
+}
+.submitbutton {
+    margin:10px;
+    background-color: #222222;
+    color:#DCDCDC;
 }
