@@ -385,6 +385,7 @@ router
           error: e
         });
       }
+    });
 
   router
     .route('/favorited')

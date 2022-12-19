@@ -93,6 +93,91 @@ const createEvent = async (
 	}
 };
 
+const editEvent = async (
+	eventName,
+	location,
+	startTime,
+	endTime,
+	postedBy,
+	tags,
+	description,
+	capacity,
+	imageData
+) => {
+	//
+	const event_collection_c = await event_collection();
+
+	helpers.errorIfNotProperString(eventName, "eventName");
+	helpers.errorIfNotProperString(location, "location");
+	helpers.errorIfNotProperDateTime(startTime);
+	helpers.errorIfNotProperDateTime(endTime);
+	if (Date.parse(startTime) >= Date.parse(endTime)) {
+		throw `StartTime can't come after endTime`;
+	}
+
+	//check if user exists
+	helpers.errorIfNotProperUserName(postedBy, "postedBy");
+	postedBy = postedBy.toLowerCase().trim();
+	let user = await users.getUserData(postedBy);
+	if (!user) throw `No user present with userName: ${postedBy}`;
+
+	if (tags) {
+		for (let i=0;i<tags.length;i++){
+			tags[i] = tags[i].trim();
+			helpers.errorIfNotProperString(tags[i], "tag " +(i+1));
+		  }
+		// TODO: trim whitespace
+	}
+	helpers.errorIfNotProperString(description, "description");
+
+
+	let userData = await users.getUserData(postedBy);
+	let college = userData.college;
+
+
+	helpers.errorIfStringIsNotNumber(capacity);
+	capacity = parseFloat(capacity);
+
+	if (capacity < 1 || capacity % 1 > 0) {
+		throw `Invalid Capacity provided`;
+	}
+
+	if (imageData.size > 1024 * 1024 * maxImageSizeMB) {
+		throw `Image size must be below ${maxImageSizeMB} MB`;
+	}
+
+	if (!imageData.mimetype.includes("image")) {
+		throw `File must be an image`;
+	}
+
+	let new_event = {
+		eventName: eventName,
+		location: location,
+		startTime: new Date(startTime),
+		endTime: new Date(endTime),
+		postedBy: postedBy,
+		tags: tags,
+		description: description,
+		capacity: capacity,
+		numUserRegistered: 0,
+		usersRegistered: [],
+		numFavorite: 0,
+		favoriteUsers: [],
+		image: imageData,
+		college: college,
+		comments: [],
+		cancelled: false
+	};
+
+	const insertInfo = await event_collection_c.insertOne(new_event);
+
+	if (insertInfo.insertedCount === 0) {
+		throw `Server Error`;
+	} else {
+		return { eventInserted: true };
+	}
+};
+
 const getEventById = async (id) => {
 	if (!id) throw "You must provide an ID to search for";
 	if (typeof id !== "string") throw "ID must be a string";
@@ -481,7 +566,8 @@ const getEventsCreatedBy = async (username) => {
 };
 
 module.exports = {
-	createEvent, 
+	createEvent,
+	editEvent, 
 	getEventById, 
 	getUpcomingEvents,
 	registerForEvent,
