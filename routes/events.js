@@ -123,13 +123,14 @@ router
       }
       let register = await events.registerForEvent(req.session.user, req.params.id);
       if (register.userInserted==true){
-        let allRegistered = await events.getRegistered(req.session.user);
-        res.render("registeredEvents", {
-          title: "Registered Events",
-          loggedIn: true,
-          username: req.session.user,
-          event: allRegistered
-        });
+        //let allRegistered = await events.getRegistered(req.session.user);
+        res.redirect("/" + req.params.id);
+        // res.render("registeredEvents", {
+        //   title: "Registered Events",
+        //   loggedIn: true,
+        //   username: req.session.user,
+        //   event: allRegistered
+        // });
       }else{
         throw "Was not able to register for event";
       }
@@ -176,33 +177,20 @@ router
         });
         return;
       }
-      let user = await users.getUserData(req.session.user);
-      for(let i = 0; i < user.eventsRegistered.length; i ++){
-        if(user.eventsRegistered[i] == req.params.id){
-          let unregister = await events.unregisterForEvent(req.session.user, req.params.id);
-          if(unregister.userInserted == true){
-            let allRegistered = await events.getRegistered(req.session.user);
-            res.render("registeredEvents", {
-              title: "Registered Events",
-              loggedIn: true,
-              username: req.session.user,
-              event: allRegistered,
-              registered: true
-            });
-          }else{
-            throw "Was not able to unregister for event";
-          }
-          return;
-        }
+      let unregister = await events.unregisterForEvent(req.session.user, req.params.id);
+      if(unregister.userInserted == true){
+        res.redirect("/" + req.params.id);
+        // let allRegistered = await events.getRegistered(req.session.user);
+        // res.render("registeredEvents", {
+        //   title: "Registered Events",
+        //   loggedIn: true,
+        //   username: req.session.user,
+        //   event: allRegistered,
+        //   registered: false
+        // });
+      }else{
+        throw "Was not able to unregister for event";
       }
-      let allRegistered = await events.getRegistered(req.session.user);
-      res.render("registeredEvents", {
-        title: "Registered Events",
-        loggedIn: true,
-        username: req.session.user,
-        event: allRegistered,
-        registered: false
-      });
     }catch(e){
       res.status(400).render("errorPage",{
         title: "Error",
@@ -226,14 +214,16 @@ router
       }
       let favorited = await events.favoriteEvent(req.session.user, req.params.id);
       if(favorited.success == true){
+        res.redirect("/" + req.params.id);
         //res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
-        let allFavorites = await events.getFavorites(req.session.user);
-        res.render("favorited", {
-          title: "Favorited Events",
-          loggedIn: true,
-          username: req.session.user,
-          event: allFavorites
-        });
+        // let allFavorites = await events.getFavorites(req.session.user);
+        // res.render("favorited", {
+        //   title: "Favorited Events",
+        //   loggedIn: true,
+        //   username: req.session.user,
+        //   event: allFavorites,
+        //   favorited: true
+        // });
       }
       else{
         throw "Was not able to favorite event";
@@ -259,33 +249,20 @@ router
         });
         return;
       }
-      let user = await users.getUserData(req.session.user);
-      for(let i = 0; i < user.favoriteEvents.length; i ++){
-        if(user.favoriteEvents[i] == req.params.id){
-          let unfavorited = await events.unfavoriteEvent(req.session.user, req.params.id);
-          if(unfavorited.success == true){
-            let allFavorites = await events.getFavorites(req.session.user);
-            res.render("favorited", {
-            title: "Favorited Events",
-            loggedIn: true,
-            username: req.session.user,
-            event: allFavorites,
-            favorited: true
-          });
-          }else{
-            throw "Was not able to unregister for event";
-          }
-          return;
-        }
+      let unfavorited = await events.unfavoriteEvent(req.session.user, req.params.id);
+      if(unfavorited.success == true){
+        res.redirect("/" + req.params.id);
+      //   let allFavorites = await events.getFavorites(req.session.user);
+      //   res.render("favorited", {
+      //   title: "Favorited Events",
+      //   loggedIn: true,
+      //   username: req.session.user,
+      //   event: allFavorites,
+      //   favorited: false
+      // });
+      }else{
+        throw "Was not able to unregister for event";
       }
-        let allFavorites = await events.getFavorites(req.session.user);
-        res.render("favorited", {
-          title: "Favorited Events",
-          loggedIn: true,
-          username: req.session.user,
-          event: allFavorites,
-          favorited: false
-        });
     }catch(e){
       res.status(400).render("errorPage",{
         title: "Error",
@@ -308,17 +285,18 @@ router
         return;
       }
       let cancel = await events.cancelEvent(req.session.user, req.params.id);
-      let answer = await events.getEventById(req.params.id);
+      //let answer = await events.getEventById(req.params.id);
       if(cancel.success == true){
+        res.redirect("/" + req.params.id);
         //res.render('partials/favorite', {layout: null, favorite: favorited.favoritedEventSwitched});    //ajax
-        let allCreated = await events.getEventsCreatedBy(req.session.user);
-        res.render("createdEvents", {
-          title: "Created Events",
-          loggedIn: true,
-          username: req.session.user,
-          event: allCreated,
-          cancel: answer.cancelled
-        });
+        // let allCreated = await events.getEventsCreatedBy(req.session.user);
+        // res.render("createdEvents", {
+        //   title: "Created Events",
+        //   loggedIn: true,
+        //   username: req.session.user,
+        //   event: allCreated,
+        //   cancel: answer.cancelled
+        // });
       }
       else{
         throw "Was not able to cancel event";
@@ -345,16 +323,17 @@ router
         return;
       }
       let uncancel = await events.uncancelEvent(req.session.user, req.params.id);
-      let answer = await events.getEventById(req.params.id);
+      //let answer = await events.getEventById(req.params.id);
       if(uncancel.success == true){
-        let allCreated = await events.getEventsCreatedBy(req.session.user);
-        res.render("createdEvents", {
-          title: "Created Events",
-          loggedIn: true,
-          username: req.session.user,
-          event: allCreated,
-          cancel: answer.cancelled
-        });
+        res.redirect("/" + req.params.id);
+        // let allCreated = await events.getEventsCreatedBy(req.session.user);
+        // res.render("createdEvents", {
+        //   title: "Created Events",
+        //   loggedIn: true,
+        //   username: req.session.user,
+        //   event: allCreated,
+        //   cancel: answer.cancelled
+        // });
       }
       else{
         throw "Was not able to uncancel event";
